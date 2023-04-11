@@ -3,11 +3,12 @@ import numpy as np
 from collections import Counter, OrderedDict, defaultdict
 import nltk
 from tqdm import tqdm
+import random
+import torch
 from datasets import load_dataset
+from torch.utils.data import Dataset
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
-class Dataset:
-    def __init__(self, dataset_name) -> None:
-        self.dataset = load_dataset(dataset_name)      
 
 class NLTKTokenizer():
     def __init__(self):
@@ -15,13 +16,39 @@ class NLTKTokenizer():
 
     def encode(self, text):
         return self.tokenizer(text)
+    
 
+class CustomDataset(Dataset):
+    def __init__(self, dataset_name = "snli", tokenizer_cls = NLTKTokenizer) -> None:
+        self.dataset = load_dataset(dataset_name)
+        self.dataset_name = dataset_name
+        self.tokenizer_cls = tokenizer_cls
+
+    def get_data(self):
+        splits = ["train", "validation", "test"]
+        for split in splits:
+            self.dataset[split] = self.dataset[split].map(self.preprocess)
+        return self.dataset["train"], self.dataset["validation"], self.dataset["test"]
+          
+       
+    
+    def preprocess(self, datum):
+      if self.dataset_name == "snli":
+        datum["premise"] = self.tokenizer_cls(datum["premise"])
+        datum["hypothesis"] = self.tokenizer_cls(datum["hypothesis"])
+        
+        datum["premise"] = [x.lower() for x in datum["premise"]]
+        datum["hypothesis"] = [x.lower() for x in datum["hypothesis"]]
+        return datum
+      else:
+        return None
+    
+    
 
 class OrderedCounter(Counter, OrderedDict):
   """Counter that remembers the order elements are first seen"""
   def __repr__(self):
-    return '%s(%r)' % (self.__class__.__name__,
-                      OrderedDict(self))
+    return '%s(%r)' % (self.__class__.__name__, OrderedDict(self))
   def __reduce__(self):
     return self.__class__, (OrderedDict(self),)
   
@@ -102,6 +129,7 @@ def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTo
             token = tokenizer.encode(token)
             if len(token) > 0:
                token = token[0]
+               token = token.lower()
             else:
                continue
             features = list(map(float, elements[1:]))
@@ -114,3 +142,74 @@ def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTo
     featureVectors.build(vocab)
 
     return (vocab, featureVectors)
+
+def pad(tokens, length, pad_value=1):
+    """add padding 1s to a sequence to that it has the desired length"""
+    return tokens + [pad_value] * (length - len(tokens))
+
+def prepare_minibatch(mb, vocab):
+    """
+    Minibatch is a list of examples.
+    This function converts words to IDs and returns
+    torch tensors to be used as input/targets.
+    """
+    batch_size = len(mb)
+    maxlen = max([max([len(ex["premise"]), len(ex["hypothesis"])]) for ex in mb])
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    # vocab returns 0 if the word is not there
+    x = [pad([vocab.w2i.get(t, 0) for t in ex.tokens], maxlen) for ex in mb]
+    x_premise = []
+    x_hypothesis = []
+    seq_len_prem = []
+    seq_len_hyp = []
+
+    for ex in mb:
+        seq_len = len(ex["premise"])
+        padded = pad([vocab.w2i.get(t, 0) for t in ex["premise"]], maxlen)
+        x_premise.append(padded)
+        seq_len_prem.append(seq_len)
+
+        seq_len = len(ex["hypothesis"])
+        padded = pad([vocab.w2i.get(t, 0) for t in ex["hypothesis"]], maxlen)
+        x_hypothesis.append(padded)
+        seq_len_hyp.append(seq_len)
+
+
+
+    x_premise = torch.LongTensor(x_premise)
+    x_premise_packed = pack_padded_sequence(x_premise, seq_len_prem, batch_first = True, sorted = False)
+    x_premise_packed = x_premise_packed.to(device)
+
+    x_hypothesis = torch.LongTensor(x_hypothesis)
+    x_hypothesis_packed = pack_padded_sequence(x_hypothesis, seq_len_hyp, batch_first = True, sorted = False)
+    x_hypothesis_packed = x_hypothesis_packed.to(device)
+
+    y = [ex["label"] for ex in mb]
+    y = torch.LongTensor(y)
+    y = y.to(device)
+
+    return x_premise_packed, x_hypothesis_packed, y
+
+
+
+def get_minibatch(data, batch_size=64, shuffle=True):
+    """Return minibatches, optional shuffling"""
+
+    if shuffle:
+        print("Shuffling training data")
+        random.shuffle(data)  # shuffle training data each epoch
+
+    batch = []
+
+    # yield minibatches
+    for example in data:
+        batch.append(example)
+
+        if len(batch) == batch_size:
+            yield batch
+            batch = []
+            
+    # in case there is something left
+    if len(batch) > 0:
+        yield batch
