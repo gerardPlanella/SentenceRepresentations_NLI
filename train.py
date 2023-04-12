@@ -6,7 +6,7 @@ from torch import optim
 import torch
 
 
-def train_model(model, optimizer, num_iterations=10000, 
+def train_model(model, dataset, optimizer, num_iterations=10000, 
                 print_every=1000, eval_every=1000,
                 batch_fn=get_minibatch, 
                 prep_fn=prepare_minibatch,
@@ -20,6 +20,8 @@ def train_model(model, optimizer, num_iterations=10000,
   criterion = nn.CrossEntropyLoss() # loss function
   best_eval = 0.
   best_iter = 0
+
+  train_data, dev_data, test_data = dataset.get_data()
   
   # store train loss and validation accuracy during training
   # so we can plot them afterwards
@@ -107,16 +109,9 @@ def train_model(model, optimizer, num_iterations=10000,
             model, test_data, batch_size=eval_batch_size, 
             batch_fn=batch_fn, prep_fn=prep_fn)
         
-        #for testing performances on bigger and smaller sentences separately
-        _, _, test_acc_big = eval_fn(
-            model, test_data_big, batch_size=eval_batch_size, 
-            batch_fn=batch_fn, prep_fn=prep_fn)
-        _, _, test_acc_small = eval_fn(
-            model, test_data_small, batch_size=eval_batch_size, 
-            batch_fn=batch_fn, prep_fn=prep_fn)
         
         print("best model iter {:d}: "
-              "train acc={:.4f}, dev acc={:.4f}, test acc={:.4f}, test acc on big sentences={:.4f}, test acc on small sentences={:.4f}".format(
-                  best_iter, train_acc, dev_acc, test_acc, test_acc_big, test_acc_small))
+              "train acc={:.4f}, dev acc={:.4f}, test acc={:.4f}".format(
+                  best_iter, train_acc, dev_acc, test_acc))
         
         return losses, accuracies

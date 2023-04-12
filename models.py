@@ -6,7 +6,7 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
 
 class BaseSentenceEncoder(nn.Module):
-    def __init__(self, vocab_size, embedding_dim, hidden_dim, vocab, featureVectors) -> None:
+    def __init__(self) -> None:
         super(BaseSentenceEncoder, self).__init__()
         self.out_dim = 0
     
@@ -43,7 +43,7 @@ class AWESentenceEncoder(BaseSentenceEncoder):
     def __init__(self, vocab_size, embedding_dim, hidden_dim, vocab, featureVectors) -> None:
         super(AWESentenceEncoder, self).__init__()
         self.vocab = vocab
-        self.embed = nn.Embedding(vocab_size, embedding_dim, requires_grad = False)
+        self.embed = nn.Embedding(vocab_size, embedding_dim)
         self.out_dim = embedding_dim
         with torch.no_grad():
             self.embed.weight.data.copy_(torch.from_numpy(featureVectors.vectors))
@@ -61,11 +61,12 @@ class UnidirectionalLSTMSentenceEncoder(BaseSentenceEncoder):
     def __init__(self, vocab_size, embedding_dim, hidden_dim, vocab, featureVectors) -> None:
         super(UnidirectionalLSTMSentenceEncoder, self).__init__()
         self.vocab = vocab
-        self.embed = nn.Embedding(vocab_size, embedding_dim, requires_grad = False)
+        self.embed = nn.Embedding(vocab_size, embedding_dim)
         self.rnn = nn.LSTMCell(embedding_dim, hidden_dim)
         self.out_dim = hidden_dim
         with torch.no_grad():
             self.embed.weight.data.copy_(torch.from_numpy(featureVectors.vectors))
+            self.embed.weight.requires_grad = False
 
 
     def forward(self, input):
@@ -100,11 +101,12 @@ class SimpleBiLSTMSentenceEncoder(BaseSentenceEncoder):
     def __init__(self, vocab_size, embedding_dim, hidden_dim, vocab, featureVectors) -> None:
         super(SimpleBiLSTMSentenceEncoder, self).__init__()
         self.vocab = vocab
-        self.embed = nn.Embedding(vocab_size, embedding_dim, requires_grad = False)
+        self.embed = nn.Embedding(vocab_size, embedding_dim)
         self.rnn = nn.LSTMCell(embedding_dim, hidden_dim)
         self.out_dim = 2*hidden_dim
         with torch.no_grad():
             self.embed.weight.data.copy_(torch.from_numpy(featureVectors.vectors))
+            self.embed.weight.requires_grad = False
 
 
     def forward(self, input):
@@ -150,11 +152,13 @@ class BiLSTMSentenceEncoder(BaseSentenceEncoder):
     def __init__(self, vocab_size, embedding_dim, hidden_dim, vocab, featureVectors) -> None:
         super(SimpleBiLSTMSentenceEncoder, self).__init__()
         self.vocab = vocab
-        self.embed = nn.Embedding(vocab_size, embedding_dim, requires_grad = False)
+        self.embed = nn.Embedding(vocab_size, embedding_dim)
         self.rnn = nn.LSTMCell(embedding_dim, hidden_dim)
         self.out_dim = 2*hidden_dim
         with torch.no_grad():
             self.embed.weight.data.copy_(torch.from_numpy(featureVectors.vectors))
+            self.embed.weight.requires_grad = False
+
     def forward(self, input):
         _, lens = pad_packed_sequence(input, batch_first=True)
         assert 0 not in lens
@@ -186,8 +190,4 @@ class BiLSTMSentenceEncoder(BaseSentenceEncoder):
             return torch.max(h_stack, 0)#batch_size, hidden_size * 2
         else:
             #TODO: Handle Padded tokens
-            
-
-
-
-
+            pass

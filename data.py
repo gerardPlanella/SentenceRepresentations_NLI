@@ -34,8 +34,8 @@ class CustomDataset(Dataset):
     
     def preprocess(self, datum):
       if self.dataset_name == "snli":
-        datum["premise"] = self.tokenizer_cls(datum["premise"])
-        datum["hypothesis"] = self.tokenizer_cls(datum["hypothesis"])
+        datum["premise"] = self.tokenizer_cls.encode(datum["premise"])
+        datum["hypothesis"] = self.tokenizer_cls.encode(datum["hypothesis"])
         
         datum["premise"] = [x.lower() for x in datum["premise"]]
         datum["hypothesis"] = [x.lower() for x in datum["hypothesis"]]
@@ -157,8 +157,6 @@ def prepare_minibatch(mb, vocab):
     maxlen = max([max([len(ex["premise"]), len(ex["hypothesis"])]) for ex in mb])
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    # vocab returns 0 if the word is not there
-    x = [pad([vocab.w2i.get(t, 0) for t in ex.tokens], maxlen) for ex in mb]
     x_premise = []
     x_hypothesis = []
     seq_len_prem = []
@@ -166,11 +164,13 @@ def prepare_minibatch(mb, vocab):
 
     for ex in mb:
         seq_len = len(ex["premise"])
+        # vocab returns 0 if the word is not there
         padded = pad([vocab.w2i.get(t, 0) for t in ex["premise"]], maxlen)
         x_premise.append(padded)
         seq_len_prem.append(seq_len)
 
         seq_len = len(ex["hypothesis"])
+        # vocab returns 0 if the word is not there
         padded = pad([vocab.w2i.get(t, 0) for t in ex["hypothesis"]], maxlen)
         x_hypothesis.append(padded)
         seq_len_hyp.append(seq_len)
