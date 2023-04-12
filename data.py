@@ -19,10 +19,11 @@ class NLTKTokenizer():
     
 
 class CustomDataset(Dataset):
-    def __init__(self, dataset_name = "snli", tokenizer_cls = NLTKTokenizer) -> None:
-        self.dataset = load_dataset(dataset_name)
+    def __init__(self, dataset_name = "snli", tokenizer_cls = NLTKTokenizer, data_percentage:int = 100) -> None:
+        assert data_percentage > 0 and data_percentage <= 100
+        self.dataset = load_dataset(dataset_name, split = [f"train[:{data_percentage}%]", f"validation[:{data_percentage}%]", f"test[:{data_percentage}%]"])
         self.dataset_name = dataset_name
-        self.tokenizer_cls = tokenizer_cls
+        self.tokenizer_cls = tokenizer_cls()
 
     def get_data(self):
         splits = ["train", "validation", "test"]
@@ -30,8 +31,6 @@ class CustomDataset(Dataset):
             self.dataset[split] = self.dataset[split].map(self.preprocess)
         return self.dataset["train"], self.dataset["validation"], self.dataset["test"]
           
-       
-    
     def preprocess(self, datum):
       if self.dataset_name == "snli":
         datum["premise"] = self.tokenizer_cls.encode(datum["premise"])
