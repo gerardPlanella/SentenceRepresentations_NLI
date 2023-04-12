@@ -36,8 +36,8 @@ def train_model(model, dataset, optimizer, num_iterations=10000,
 
       # forward pass
       model.train()
-      x, targets = prep_fn(batch, model.vocab)
-      logits = model(x)
+      x_premise_packed, x_hypothesis_packed, targets = prep_fn(batch, model.vocab)
+      logits = model(x_premise_packed, x_hypothesis_packed)
 
       B = targets.size(0)  # later we will use B examples per update
       
