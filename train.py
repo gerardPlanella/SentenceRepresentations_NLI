@@ -5,7 +5,7 @@ from torch import nn
 from torch import optim
 import torch
 
-
+#TODO: Add tensorboard support
 def train_model(model, dataset, optimizer, num_iterations=10000, 
                 print_every=1000, eval_every=1000,
                 batch_fn=get_minibatch, 

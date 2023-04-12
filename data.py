@@ -8,6 +8,8 @@ import torch
 from datasets import load_dataset
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
+import pickle
+import os
 
 
 class NLTKTokenizer():
@@ -22,13 +24,19 @@ class CustomDataset(Dataset):
     def __init__(self, dataset_name = "snli", tokenizer_cls = NLTKTokenizer, data_percentage:int = 100) -> None:
         assert data_percentage > 0 and data_percentage <= 100
         self.dataset = load_dataset(dataset_name, split = [f"train[:{data_percentage}%]", f"validation[:{data_percentage}%]", f"test[:{data_percentage}%]"])
+        self.dataset = {f"{split}": self.dataset[i] for i, split in enumerate(["train", "validation", "test"])}
         self.dataset_name = dataset_name
         self.tokenizer_cls = tokenizer_cls()
+        self.preprocessed_dataset = None
 
     def get_data(self):
         splits = ["train", "validation", "test"]
+        if self.preprocessed_dataset is not None:
+           return self.preprocessed_dataset
+        
         for split in splits:
             self.dataset[split] = self.dataset[split].map(self.preprocess)
+        self.preprocessed_dataset = (self.dataset["train"], self.dataset["validation"], self.dataset["test"])
         return self.dataset["train"], self.dataset["validation"], self.dataset["test"]
           
     def preprocess(self, datum):
@@ -41,6 +49,39 @@ class CustomDataset(Dataset):
         return datum
       else:
         return None
+    
+    def get_vocab(self, splits=["train", "validation", "test"], vocab_path = "dataset_vocab.pickle"):
+        if self.dataset_name == "snli":
+
+            if os.path.exists(vocab_path):
+                print("Loading saved Vocabulary from " + vocab_path)
+                with open(vocab_path, 'rb') as f:
+                    data = pickle.load(f)
+                    return data
+
+            train, val, test = self.get_data()
+            datasplits = {"train":train, "validation":val, "test":test}
+            vocab = {}
+            for split in splits:
+                data = datasplits[split]
+                for datum in data:
+                    premise_tokens = set(datum["premise"])
+                    hypothesis_tokens = set(datum["hypothesis"])
+                    tokens = premise_tokens.union(hypothesis_tokens)
+                    for token in tokens:
+                        token_stem = self.tokenizer_cls.encode(token)[0].lower()
+                        if token_stem not in vocab:
+                            vocab[token_stem] = 1
+
+            with open(vocab_path, 'wb') as f:
+                print("Saving vocabulary at: " + vocab_path)
+                pickle.dump(vocab, f)
+
+            return vocab
+        else:
+            return None
+
+
     
     
 
@@ -113,7 +154,11 @@ class Vocabulary:
 
 
 
-def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTokenizer, reduced_vocab = False) -> Tuple[Vocabulary, FeatureVectors]:
+def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTokenizer, reduced_vocab = False, dataset_vocab = None, vocab_path = 'vocab.pickle') -> Tuple[Vocabulary, FeatureVectors]:
+    if os.path.exists(vocab_path):
+       print("Loading saved Vocabulary from " + vocab_path)
+       return load_vocab(vocab_path)
+    
     vocab = Vocabulary()
     featureVectors = FeatureVectors()
     tokenizer = tokenizer_cls()
@@ -131,6 +176,10 @@ def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTo
                token = token.lower()
             else:
                continue
+            if dataset_vocab is not None:
+               #Merge Vocabulary
+               if token not in dataset_vocab:
+                  continue
             features = list(map(float, elements[1:]))
             vocab.count_token(token)
             featureVectors.add_feature(token, features)
@@ -139,8 +188,21 @@ def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTo
                 break
     vocab.build()
     featureVectors.build(vocab)
+    print("Saving vocabulary at " + vocab_path)
+    save_vocab(vocab, featureVectors, vocab_path)
 
     return (vocab, featureVectors)
+
+def save_vocab(vocab, featureVectors, path = 'vocab.pickle'):
+    data = (vocab, featureVectors)
+    with open(path, 'wb') as f:
+        pickle.dump(data, f)
+
+def load_vocab(path = 'vocab.pickle'):
+    with open(path, 'rb') as f:
+        data = pickle.load(f)
+        vocab, featureVectors = data
+        return vocab, featureVectors
 
 def pad(tokens, length, pad_value=1):
     """add padding 1s to a sequence to that it has the desired length"""
