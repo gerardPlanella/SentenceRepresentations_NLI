@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu_titanrtx_shared_course
+#SBATCH --gres=gpu:1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=3
+#SBATCH --time=02:00:00
+#SBATCH --mem=32000M
+#SBATCH --output=train_%A.out
+
+module purge
+module load 2021
+module load Anaconda3/2021.05
+
+# Your job starts in the directory where you call sbatch
+# Activate your environment
+source activate ATCS_1
+# Run your code
+srun python test.py

@@ -29,6 +29,9 @@ class CustomDataset(Dataset):
         self.tokenizer_cls = tokenizer_cls()
         self.preprocessed_dataset = None
 
+    def filter_fn(self, example):
+      return example['label'] != -1
+
     def get_data(self):
         splits = ["train", "validation", "test"]
         if self.preprocessed_dataset is not None:
@@ -36,6 +39,7 @@ class CustomDataset(Dataset):
         
         for split in splits:
             self.dataset[split] = self.dataset[split].map(self.preprocess)
+            self.dataset[split] = self.dataset[split].filter(lambda x: x["label"] != -1)
         self.preprocessed_dataset = (self.dataset["train"], self.dataset["validation"], self.dataset["test"])
         return self.dataset["train"], self.dataset["validation"], self.dataset["test"]
           
@@ -208,7 +212,7 @@ def pad(tokens, length, pad_value=1):
     """add padding 1s to a sequence to that it has the desired length"""
     return tokens + [pad_value] * (length - len(tokens))
 
-def prepare_minibatch(mb, vocab):
+def prepare_minibatch(mb, vocab, device):
     """
     Minibatch is a list of examples.
     This function converts words to IDs and returns
@@ -216,7 +220,6 @@ def prepare_minibatch(mb, vocab):
     """
     batch_size = len(mb)
     maxlen = max([max([len(ex["premise"]), len(ex["hypothesis"])]) for ex in mb])
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     x_premise = []
     x_hypothesis = []
@@ -238,34 +241,38 @@ def prepare_minibatch(mb, vocab):
 
 
 
-    x_premise = torch.LongTensor(x_premise)
-    x_premise_packed = pack_padded_sequence(x_premise, seq_len_prem, batch_first = True, sorted = False)
-    x_premise_packed = x_premise_packed.to(device)
+    x_premise = torch.LongTensor(x_premise).to(device)
+    #x_premise_packed = pack_padded_sequence(x_premise, seq_len_prem, batch_first = True, enforce_sorted = False)
+    #x_premise_packed = x_premise_packed.to(device)
 
-    x_hypothesis = torch.LongTensor(x_hypothesis)
-    x_hypothesis_packed = pack_padded_sequence(x_hypothesis, seq_len_hyp, batch_first = True, sorted = False)
-    x_hypothesis_packed = x_hypothesis_packed.to(device)
+    x_hypothesis = torch.LongTensor(x_hypothesis).to(device)
+    #x_hypothesis_packed = pack_padded_sequence(x_hypothesis, seq_len_hyp, batch_first = True, enforce_sorted = False)
+    #x_hypothesis_packed = x_hypothesis_packed.to(device)
 
     y = [ex["label"] for ex in mb]
     y = torch.LongTensor(y)
     y = y.to(device)
 
-    return x_premise_packed, x_hypothesis_packed, y
+    return (x_premise, seq_len_prem), (x_hypothesis, seq_len_hyp), y
 
 
 
 def get_minibatch(data, batch_size=64, shuffle=True):
     """Return minibatches, optional shuffling"""
 
+    indices = list(range(len(data)))
     if shuffle:
         print("Shuffling training data")
-        random.shuffle(data)  # shuffle training data each epoch
+        random.shuffle(indices)
 
     batch = []
 
     # yield minibatches
-    for example in data:
-        batch.append(example)
+    for i in indices:
+        #TODO: Generate new vocab and delete
+        if(data[i]["label"] == -1):
+           continue
+        batch.append(data[i])
 
         if len(batch) == batch_size:
             yield batch

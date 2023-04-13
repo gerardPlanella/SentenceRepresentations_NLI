@@ -14,10 +14,10 @@ class BaseSentenceEncoder(nn.Module):
         pass
 
 class SentenceClassifier(nn.Module):
-    def __init__(self, vocab_size, embedding_dim, encoder_hidden_dim, classifier_hidden_dim, vocab, encoderType:BaseSentenceEncoder) -> None:
+    def __init__(self, vocab_size, embedding_dim, encoder_hidden_dim, classifier_hidden_dim, vocab, featureVectors, encoderType:BaseSentenceEncoder) -> None:
         super(SentenceClassifier, self).__init__()
-        
-        self.encoder = encoderType(vocab_size, embedding_dim, encoder_hidden_dim, vocab)
+        self.vocab = vocab
+        self.encoder = encoderType(vocab_size, embedding_dim, encoder_hidden_dim, vocab, featureVectors)
         self.linear_1 = nn.Linear(self.encoder.out_dim * 4, classifier_hidden_dim)
         self.linear_2 = nn.Linear(classifier_hidden_dim, 3)
         self.act_fn = nn.Softmax(dim = 1)
@@ -48,8 +48,8 @@ class AWESentenceEncoder(BaseSentenceEncoder):
         with torch.no_grad():
             self.embed.weight.data.copy_(torch.from_numpy(featureVectors.vectors))
     
-    def forward(self, input):
-        _, lens = pad_packed_sequence(input, batch_first=True)
+    def forward(self, input_tup):
+        input, lens = input_tup
         assert 0 not in lens
         embeddings = self.embed(input) #batch_size, n_words, embedding_dim
         summed = embeddings.sum(1) #batch_size, embedding_dim

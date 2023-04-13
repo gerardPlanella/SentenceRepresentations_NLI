@@ -1,117 +1,68 @@
 from data import prepare_minibatch, get_minibatch
 from evaluation import evaluate_minibatch
 import time
-from torch import nn
 from torch import optim
 import torch
+from tqdm import tqdm
 
 #TODO: Add tensorboard support
-def train_model(model, dataset, optimizer, num_iterations=10000, 
-                print_every=1000, eval_every=1000,
+def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
                 batch_fn=get_minibatch, 
                 prep_fn=prepare_minibatch,
                 eval_fn=evaluate_minibatch,
-                batch_size=64, eval_batch_size=None):
-  """Train a model."""  
-  iter_i = 0
-  train_loss = 0.
-  print_num = 0
-  start = time.time()
-  criterion = nn.CrossEntropyLoss() # loss function
-  best_eval = 0.
-  best_iter = 0
+                batch_size=64, eval_batch_size=None,
+                device = "cpu"):
+    """Train a model."""  
+    train_data, dev_data, test_data = dataset.get_data()
 
-  train_data, dev_data, test_data = dataset.get_data()
-  
-  # store train loss and validation accuracy during training
-  # so we can plot them afterwards
-  losses = []
-  accuracies = []  
-  
-  if eval_batch_size is None:
-    eval_batch_size = batch_size
-  
-  while True:  # when we run out of examples, shuffle and continue
-    for batch in batch_fn(train_data, batch_size=batch_size):
+    # store train loss and validation accuracy during training
+    # so we can plot them afterwards
+    train_losses = []
+    val_losses = []
+    val_accuracies = []
+    test_acc = 0  
 
-      # forward pass
-      model.train()
-      x_premise_packed, x_hypothesis_packed, targets = prep_fn(batch, model.vocab)
-      logits = model(x_premise_packed, x_hypothesis_packed)
+    if eval_batch_size is None:
+        eval_batch_size = batch_size
 
-      B = targets.size(0)  # later we will use B examples per update
-      
-      # compute cross-entropy loss (our criterion)
-      # note that the cross entropy loss function computes the softmax for us
-      loss = criterion(logits.view([B, -1]), targets.view(-1))
-      train_loss += loss.item()
+    for epoch in tqdm(range(num_epochs)):
 
-      # backward pass (tip: check the Introduction to PyTorch notebook)
+        model.train()
+        current_loss = 0.
+        for batch in batch_fn(train_data, batch_size=batch_size):
+            # forward pass
+            premise_tup, hypothesis_tup, targets = prep_fn(batch, model.vocab, device)
+            logits = model(premise_tup, hypothesis_tup)
+            B = targets.size(0)  # later we will use B examples per update
+            loss = criterion(logits.view([B, -1]), targets.view(-1))
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            current_loss = current_loss + loss
 
-      # erase previous gradients
-      optimizer.zero_grad()
-      
-      # compute gradients
-      loss.backward()
-
-      # update weights - take a small step in the opposite dir of the gradient
-      optimizer.step()
-
-      print_num += 1
-      iter_i += 1
-
-      # print info
-      if iter_i % print_every == 0:
-        print("Iter %r: loss=%.4f, time=%.2fs" % 
-              (iter_i, train_loss, time.time()-start))
-        losses.append(train_loss)
-        print_num = 0        
-        train_loss = 0.
-
-      # evaluate
-      if iter_i % eval_every == 0:
-        _, _, accuracy = eval_fn(model, dev_data, batch_size=eval_batch_size,
-                                 batch_fn=batch_fn, prep_fn=prep_fn)
-        accuracies.append(accuracy)
-        print("iter %r: dev acc=%.4f" % (iter_i, accuracy))       
+        scheduler.step()
+        train_losses.append(current_loss)
+        print("Training Loss: " + str(current_loss))
         
-        # save best model parameters
-        if accuracy > best_eval:
-          print("new highscore")
-          best_eval = accuracy
-          best_iter = iter_i
-          path = "{}.pt".format(model.__class__.__name__)
-          ckpt = {
-              "state_dict": model.state_dict(),
-              "optimizer_state_dict": optimizer.state_dict(),
-              "best_eval": best_eval,
-              "best_iter": best_iter
-          }
-          torch.save(ckpt, path)
-
-      # done training
-      if iter_i == num_iterations:
-        print("Done training")
-        
-        # evaluate on train, dev, and test with best model
-        print("Loading best model")
-        path = "{}.pt".format(model.__class__.__name__)        
-        ckpt = torch.load(path)
-        model.load_state_dict(ckpt["state_dict"])
-        
-        _, _, train_acc = eval_fn(
-            model, train_data, batch_size=eval_batch_size, 
+        _, _, dev_acc, dev_loss = eval_fn(
+            model, criterion, dev_data, batch_size=eval_batch_size,
             batch_fn=batch_fn, prep_fn=prep_fn)
-        _, _, dev_acc = eval_fn(
-            model, dev_data, batch_size=eval_batch_size,
-            batch_fn=batch_fn, prep_fn=prep_fn)
-        _, _, test_acc = eval_fn(
-            model, test_data, batch_size=eval_batch_size, 
-            batch_fn=batch_fn, prep_fn=prep_fn)
+
+        val_losses.append(dev_loss)
+        val_accuracies.append(dev_acc)
         
-        
-        print("best model iter {:d}: "
-              "train acc={:.4f}, dev acc={:.4f}, test acc={:.4f}".format(
-                  best_iter, train_acc, dev_acc, test_acc))
-        
-        return losses, accuracies
+        print("Validation Loss: " + str(dev_loss))
+        print("Validation Accuracy: " + str(dev_acc))
+
+        if optimizer.param_groups[0]['lr'] < 10**(-5):
+            print("Training stopped due to LR limit.")
+            break
+    
+    _, _, test_acc, _ = eval_fn(
+            model, criterion, test_data, batch_size=batch_size,
+            batch_fn=batch_fn, prep_fn=prep_fn, device=device)
+    
+    print("Test Accuracy: " + str(test_acc))
+
+    return train_losses, val_losses, val_accuracies, test_acc
+    
