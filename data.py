@@ -159,7 +159,7 @@ class Vocabulary:
 
 
 
-def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTokenizer, reduced_vocab = False, dataset_vocab = None, vocab_path = 'vocab.pickle') -> Tuple[Vocabulary, FeatureVectors]:
+def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTokenizer, reduced_vocab = False, dataset_vocab = None, vocab_path = 'vocab.pickle', reload = False) -> Tuple[Vocabulary, FeatureVectors]:
     if os.path.exists(vocab_path):
        print("Loading saved Vocabulary from " + vocab_path)
        return load_vocab(vocab_path)

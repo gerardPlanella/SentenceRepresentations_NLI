@@ -45,7 +45,7 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
             if i%print_every == 0:
                 print(f"Batch number {i}")
 
-        scheduler.step()
+        
         train_losses.append(current_loss)
         print("Training Loss: " + str(current_loss))
         
@@ -62,6 +62,9 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
         if optimizer.param_groups[0]['lr'] < 10**(-5):
             print("Training stopped due to LR limit.")
             break
+
+        
+        scheduler.step()
     
     _, _, test_acc, _ = eval_fn(
             model, criterion, test_data, batch_size=batch_size,
