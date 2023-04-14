@@ -26,7 +26,7 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
     test_acc = 0  
     print_every = 1000
     best_eval = 0
-    best_epoch = 0
+    best_iter = 0
 
     if eval_batch_size is None:
         eval_batch_size = batch_size
@@ -74,7 +74,7 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
                 "best_eval": best_eval,
                 "best_iter": best_iter
             }
-            torch.save(ckpt, createCheckpointPathName(checkpoint_path, model, dev_acc))
+            torch.save(ckpt, createCheckpointPathName(checkpoint_path, model.encoder, dev_acc))
 
 
         if optimizer.param_groups[0]['lr'] < 10**(-5):

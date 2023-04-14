@@ -30,12 +30,12 @@ parser.add_argument("--num_epochs", type=int, default=20)
 parser.add_argument("--embedding_dim", type=int, default=300)
 parser.add_argument("--classifier_fc_dim", type=int, default=512)
 parser.add_argument("--lr", type=float, default=0.1)
-parser.add_argument("--lr_decay", type=float, default=0.1)
+parser.add_argument("--lr_decay", type=float, default=0.99)
 parser.add_argument("--encoder_dropout", type=float, default=0.)
 parser.add_argument("--encoder_pooling", type=str, default=None)
 parser.add_argument("--encoder_lstm_dim", type=int, default=2048)
 parser.add_argument("--encoder", type=str, default="bilstm")
-parser.add_argument("--data_percentage", type=int, default=100)
+parser.add_argument("--data_percentage", type=int, default=50)
 parser.add_argument("--reload_dataset", type=bool, default=False)
 parser.add_argument("--dataset", type=str, default="snli")
 parser.add_argument("--tokenizer", type=str, default="nltk")
@@ -71,8 +71,6 @@ print("Models running on device: ", device)
 
 nltk.download('punkt')
 
-
-
 dataset = CustomDataset(data_percentage=params.data_percentage, tokenizer_cls=tokenizers[params.tokenizer], dataset_name=params.dataset)
 vocab = None
 featureVectors = None
@@ -89,7 +87,7 @@ model = SentenceClassifier(len(vocab), params.embedding_dim, params.encoder_lstm
                            ).to(device)
 
 optimizer = optim.SGD(model.parameters(), lr = params.lr)
-scheduler = lr_scheduler.ExponentialLR(optimizer, params.lr_decay)
+scheduler = lr_scheduler.MultiplicativeLR(optimizer, [params.lr_decay], verbose = True)
 criterion = nn.CrossEntropyLoss()
 
 train_model(model, dataset, optimizer, criterion, scheduler, params.num_epochs, 

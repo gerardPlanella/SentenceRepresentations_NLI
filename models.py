@@ -102,7 +102,7 @@ class BiLSTMEncoder(BaseSentenceEncoder):
         sent = torch.index_select(sent, 1, Variable(idx_sort))
 
         # Handling padding in Recurrent Networks
-        sent_packed = nn.utils.rnn.pack_padded_sequence(sent, sent_len_sorted)
+        sent_packed = nn.utils.rnn.pack_padded_sequence(sent, list(sent_len_sorted))
         sent_output = self.enc_lstm(sent_packed)[0]  # seqlen x batch x 2*nhid
         # batch x seqlen x 2*hid
         sent_output = nn.utils.rnn.pad_packed_sequence(sent_output, batch_first=True)[0]
