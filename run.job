@@ -12,8 +12,7 @@ module purge
 module load 2021
 module load Anaconda3/2021.05
 
-# Your job starts in the directory where you call sbatch
-# Activate your environment
-source activate ATCS_1
+cd $HOME/SentenceRepresentations_NLI
+source activate dl2022
 # Run your code
 srun python test.py

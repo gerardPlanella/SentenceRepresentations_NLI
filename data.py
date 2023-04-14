@@ -78,6 +78,7 @@ class CustomDataset(Dataset):
                             vocab[token_stem] = 1
 
             with open(vocab_path, 'wb') as f:
+                #TODO: Save vocab with data_percentage
                 print("Saving vocabulary at: " + vocab_path)
                 pickle.dump(vocab, f)
 
@@ -242,12 +243,12 @@ def prepare_minibatch(mb, vocab, device):
 
 
     x_premise = torch.LongTensor(x_premise).to(device)
-    #x_premise_packed = pack_padded_sequence(x_premise, seq_len_prem, batch_first = True, enforce_sorted = False)
-    #x_premise_packed = x_premise_packed.to(device)
+    seq_len_prem = torch.IntTensor(seq_len_prem)
+    seq_len_prem = seq_len_prem.to(device)
 
     x_hypothesis = torch.LongTensor(x_hypothesis).to(device)
-    #x_hypothesis_packed = pack_padded_sequence(x_hypothesis, seq_len_hyp, batch_first = True, enforce_sorted = False)
-    #x_hypothesis_packed = x_hypothesis_packed.to(device)
+    seq_len_hyp = torch.IntTensor(seq_len_hyp)
+    seq_len_hyp = seq_len_hyp.to(device)
 
     y = [ex["label"] for ex in mb]
     y = torch.LongTensor(y)
@@ -257,7 +258,7 @@ def prepare_minibatch(mb, vocab, device):
 
 
 
-def get_minibatch(data, batch_size=64, shuffle=True):
+def get_minibatch(data, batch_size=64, shuffle=True, device="cpu"):
     """Return minibatches, optional shuffling"""
 
     indices = list(range(len(data)))
