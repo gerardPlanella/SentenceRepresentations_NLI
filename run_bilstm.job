@@ -4,9 +4,9 @@
 #SBATCH --gres=gpu:1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
-#SBATCH --time=02:00:00
+#SBATCH --time=18:00:00
 #SBATCH --mem=32000M
-#SBATCH --output=train_%A.out
+#SBATCH --output=train_bilstm_%A.out
 
 module purge
 module load 2021
@@ -15,4 +15,4 @@ module load Anaconda3/2021.05
 cd $HOME/SentenceRepresentations_NLI
 source activate dl2022
 # Run your code
-srun python test.py --encoder "lstm" --n_epochs 1
+srun python train_nli.py --encoder "bilstm" --num_epochs 20
