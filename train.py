@@ -4,9 +4,12 @@ import time
 from torch import optim
 import torch
 from tqdm import tqdm
+from models import AWESentenceEncoder, LSTMEncoder, BiLSTMEncoder
+from datetime import datetime as d
 
 #TODO: Add tensorboard support
-def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
+def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs, 
+                checkpoint_path = "models/",
                 batch_fn=get_minibatch, 
                 prep_fn=prepare_minibatch,
                 eval_fn=evaluate_minibatch,
@@ -22,6 +25,8 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
     val_accuracies = []
     test_acc = 0  
     print_every = 1000
+    best_eval = 0
+    best_epoch = 0
 
     if eval_batch_size is None:
         eval_batch_size = batch_size
@@ -59,11 +64,24 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
         print("Validation Loss: " + str(dev_loss.item()))
         print("Validation Accuracy: " + str(dev_acc))
 
+        if dev_acc > best_eval:
+            print("new highscore")
+            best_eval = dev_acc
+            best_iter = epoch
+            ckpt = {
+                "state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "best_eval": best_eval,
+                "best_iter": best_iter
+            }
+            torch.save(ckpt, createCheckpointPathName(checkpoint_path, model, dev_acc))
+
+
         if optimizer.param_groups[0]['lr'] < 10**(-5):
             print("Training stopped due to LR limit.")
             break
 
-        
+
         scheduler.step()
     
     _, _, test_acc, _ = eval_fn(
@@ -74,3 +92,16 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
 
     return train_losses, val_losses, val_accuracies, test_acc
     
+
+def createCheckpointPathName(path, model, acc):
+    if path[-1] != "/" and path[-1] != "\\":
+        path = path + "/"
+
+    cls = model.__class__
+    name = cls.__name__
+    if cls == BiLSTMEncoder:
+        if model.pool_type is not None:
+            name = name + "_pooling-" + model.pool_type
+    date = d.now().strftime("%Y-%m-%d-%H-%M-%S")
+
+    return path + name +"_" +f"{acc:.2f}" +"_" + date + ".pt"

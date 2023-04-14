@@ -54,10 +54,10 @@ class CustomDataset(Dataset):
       else:
         return None
     
-    def get_vocab(self, splits=["train", "validation", "test"], vocab_path = "dataset_vocab.pickle"):
+    def get_vocab(self, splits=["train", "validation", "test"], vocab_path = "dataset_vocab.pickle", reload = False):
         if self.dataset_name == "snli":
 
-            if os.path.exists(vocab_path):
+            if os.path.exists(vocab_path) and not reload:
                 print("Loading saved Vocabulary from " + vocab_path)
                 with open(vocab_path, 'rb') as f:
                     data = pickle.load(f)
@@ -160,7 +160,7 @@ class Vocabulary:
 
 
 def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTokenizer, reduced_vocab = False, dataset_vocab = None, vocab_path = 'vocab.pickle', reload = False) -> Tuple[Vocabulary, FeatureVectors]:
-    if os.path.exists(vocab_path):
+    if os.path.exists(vocab_path) and not reload:
        print("Loading saved Vocabulary from " + vocab_path)
        return load_vocab(vocab_path)
     

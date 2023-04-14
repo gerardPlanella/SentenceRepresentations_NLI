@@ -42,6 +42,10 @@ parser.add_argument("--tokenizer", type=str, default="nltk")
 parser.add_argument("--dataset_vocab_path", type=str, default="dataset/dataset_vocab.pickle")
 parser.add_argument("--vocab_path", type=str, default="dataset/vocab.pickle")
 parser.add_argument("--embedding_path", type=str, default="dataset/glove.840B.300d.txt")
+parser.add_argument("--checkpoint_path", type=str, default="models/")
+parser.add_argument("--batch_size", type=int, default=64)
+parser.add_argument("--eval_batch_size", type=int, default=None)
+
 
 parser.add_argument("--seed", type=int, default=1234, help="seed")
 
@@ -53,6 +57,7 @@ assert params.encoder in encoders
 assert params.dataset in implemented_datasets
 if params.encoder_pooling is not None:
     assert params.encoder_pooling in encoder_poolings
+assert os.path.exists(params.checkpoint_path)
 
 np.random.seed(params.seed)
 torch.manual_seed(params.seed)
@@ -72,7 +77,7 @@ dataset = CustomDataset(data_percentage=params.data_percentage, tokenizer_cls=to
 vocab = None
 featureVectors = None
 if params.reload_dataset:
-    dataset_vocab = dataset.get_vocab(splits=["train"], vocab_path=params.dataset_vocab_path)
+    dataset_vocab = dataset.get_vocab(splits=["train"], vocab_path=params.dataset_vocab_path, reload=True)
     vocab, featureVectors = load_embeddings(path=params.embedding_path, tokenizer_cls=tokenizers[params.tokenizer], dataset_vocab=dataset_vocab, vocab_path=params.vocab_path, reload=True)
 else:
     vocab, featureVectors = load_embeddings(path=params.embedding_path, tokenizer_cls=tokenizers[params.tokenizer], vocab_path=params.vocab_path, reload=False)
@@ -87,5 +92,10 @@ optimizer = optim.SGD(model.parameters(), lr = params.lr)
 scheduler = lr_scheduler.ExponentialLR(optimizer, params.lr_decay)
 criterion = nn.CrossEntropyLoss()
 
-train_model(model, dataset, optimizer, criterion, scheduler, params.num_epochs, device = device)
+train_model(model, dataset, optimizer, criterion, scheduler, params.num_epochs, 
+            device = device, 
+            batch_size=params.batch_size, 
+            eval_batch_size=params.eval_batch_size,
+            checkpoint_path=params.checkpoint_path
+            )
 
