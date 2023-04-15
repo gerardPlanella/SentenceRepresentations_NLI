@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=3
 #SBATCH --time=18:00:00
 #SBATCH --mem=32000M
-#SBATCH --output=train_bilstm_%A.out
+#SBATCH --output=train_lstm_%A.out
 
 module purge
 module load 2021
@@ -15,4 +15,4 @@ module load Anaconda3/2021.05
 cd $HOME/SentenceRepresentations_NLI
 source activate dl2022
 # Run your code
-srun python train_nli.py --encoder "bilstm" --num_epochs 20
+srun python senteval.py 

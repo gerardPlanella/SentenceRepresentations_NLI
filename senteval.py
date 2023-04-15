@@ -10,15 +10,8 @@ import argparse
 from data import NLTKTokenizer, load_embeddings, pad
 from torch import nn
 
-# Set PATHs
 # path to senteval
 senteval_path = '../'
-# path to the NLP datasets 
-data_path = '../data/downstream'
-# path to glove embeddings
-enocder_path = '../pretrained/glove.840B.300d.txt'
-
-embedding_dim = 300
 
 encoders = {
     "AWESentenceEncoder":AWESentenceEncoder,
@@ -119,9 +112,9 @@ if __name__ == "__main__":
     
     
 
-    parser.add_argument("--data_path", type=str, default="dataset/dataset_vocab.pickle")
-    parser.add_argument("--vocab_path", type=str, default="dataset/vocab.pickle")
-    parser.add_argument("--encoder_path", type=str, default="dataset/vocab.pickle")
+    parser.add_argument("--data_path", type=str, default='../data/downstream')
+    parser.add_argument("--vocab_path", type=str, default="dataset/senteval_vocab.pickle")
+    parser.add_argument("--model_path", type=str, default="models/AWESentenceEncoder_300_0.58_2023-04-15-16-12-50.pt")
     parser.add_argument("--embedding_path", type=str, default="dataset/glove.840B.300d.txt")
     parser.add_argument("--kfold", type=int, default=10)
     parser.add_argument("--tokenizer", type=str, default="nltk")
@@ -140,13 +133,13 @@ if __name__ == "__main__":
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    assert os.path.isfile(args.encoder_path)
+    assert os.path.isfile(args.model_path)
 
-    encoder_name = args.encoder_path.split("/")[-1].split("_")[0]
+    encoder_name = args.model_path.split("/")[-1].split("_")[0]
 
     assert encoder_name in encoders
 
-    encoder = torch.load(args.encoder_path).to(device)
+    encoder = torch.load(args.model_path).encoder.to(device)
 
     print(encoder)
 

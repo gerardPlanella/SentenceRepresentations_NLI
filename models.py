@@ -48,9 +48,6 @@ class SentenceClassifier(nn.Module):
         return out2
 
 
-        
-
-
 class AWESentenceEncoder(BaseSentenceEncoder):
     def __init__(self, embedding_dim, encoder_dim, dropout ) -> None:
         super(AWESentenceEncoder, self).__init__(embedding_dim)
