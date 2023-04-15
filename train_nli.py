@@ -80,7 +80,7 @@ print("Models running on device: ", device)
 
 nltk.download('punkt')
 
-logdir = params.tensorboard_dir + encoders[params.encoder].__name__
+logdir = params.tensorboard_dir + encoders[params.encoder].__name__ + "_" + str(params.encoder_lstm_dim)
 
 if params.encoder == "bilstm" and params.encoder_pooling is not None:
     logdir += f"_pooling-{params.encoder_pooling}"

@@ -4,9 +4,9 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from torch.autograd import Variable
 
 class BaseSentenceEncoder(nn.Module):
-    def __init__(self) -> None:
+    def __init__(self, embedding_dim) -> None:
         super(BaseSentenceEncoder, self).__init__()
-        self.out_dim = 0
+        self.embedding_dim = embedding_dim
     
     def forward(self, input):
         pass
@@ -53,7 +53,7 @@ class SentenceClassifier(nn.Module):
 
 class AWESentenceEncoder(BaseSentenceEncoder):
     def __init__(self, embedding_dim, encoder_dim, dropout ) -> None:
-        super(AWESentenceEncoder, self).__init__()
+        super(AWESentenceEncoder, self).__init__(embedding_dim)
         self.out_dim = embedding_dim
     def forward(self, input, lens):
         summed = input.sum(1) #batch_size, embedding_dim
@@ -62,7 +62,7 @@ class AWESentenceEncoder(BaseSentenceEncoder):
 
 class LSTMEncoder(BaseSentenceEncoder):
     def __init__(self, embedding_dim, encoder_dim, dropout) -> None:
-        super(LSTMEncoder, self).__init__()
+        super(LSTMEncoder, self).__init__(embedding_dim)
         self.enc_lstm = nn.LSTM(embedding_dim, encoder_dim, 1, bidirectional=False, dropout = dropout)
         self.out_dim = encoder_dim
 
@@ -87,7 +87,7 @@ class LSTMEncoder(BaseSentenceEncoder):
 
 class BiLSTMEncoder(BaseSentenceEncoder):
     def __init__(self, embedding_dim, encoder_dim, dropout, pooling = None) -> None:
-        super(BiLSTMEncoder, self).__init__()
+        super(BiLSTMEncoder, self).__init__(embedding_dim)
         self.enc_lstm = nn.LSTM(embedding_dim, encoder_dim, 1, bidirectional=True, dropout = dropout)
         self.pool_type = pooling
         self.out_dim = 2*encoder_dim

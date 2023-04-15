@@ -81,13 +81,7 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
             best_eval = dev_acc
             best_iter = epoch
             best_model_path = createCheckpointPathName(checkpoint_path, model.encoder, dev_acc)
-            ckpt = {
-                "state_dict": model.state_dict(),
-                "optimizer_state_dict": optimizer.state_dict(),
-                "best_eval": best_eval,
-                "best_iter": best_iter
-            }
-            torch.save(ckpt, best_model_path)
+            torch.save(model, best_model_path)
             optimizer.param_groups[0]['lr'] /= lr_factor
 
 
@@ -100,8 +94,7 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
     
     print("Loading best model to test...")
 
-    ckpt = torch.load(best_model_path)
-    model.load_state_dict(ckpt["state_dict"])
+    model = torch.load(best_model_path)
     _, _, test_acc, _ = eval_fn(
             model, criterion, test_data, batch_size=batch_size,
             batch_fn=batch_fn, prep_fn=prep_fn, device=device)
@@ -109,7 +102,6 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
     print("Test Accuracy: " + str(test_acc))
     if writer is not None:
         writer.add_scalar("Test Accuracy", test_acc)
-        writer.add_scalar("Best Epoch", ckpt["best_iter"])
 
     return train_losses, val_losses, val_accuracies, test_acc
     
@@ -125,4 +117,4 @@ def createCheckpointPathName(path, model, acc):
             name = name + "_pooling-" + model.pool_type
     date = d.now().strftime("%Y-%m-%d-%H-%M-%S")
 
-    return path + name +"_" +f"{acc:.2f}" +"_" + date + ".pt"
+    return path + name +"_" + str(model.out_dim) +"_"+f"{acc:.2f}" +"_" + date + ".pt"
