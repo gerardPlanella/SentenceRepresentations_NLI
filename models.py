@@ -103,15 +103,20 @@ class BiLSTMEncoder(BaseSentenceEncoder):
 
         # Handling padding in Recurrent Networks
         sent_packed = nn.utils.rnn.pack_padded_sequence(sent, list(sent_len_sorted))
-        sent_output = self.enc_lstm(sent_packed)[0]  # seqlen x batch x 2*nhid
+        sent_output, (h_n, c_n) = self.enc_lstm(sent_packed)  # seqlen x batch x 2*nhid
         # batch x seqlen x 2*hid
         sent_output = nn.utils.rnn.pad_packed_sequence(sent_output, batch_first=True)[0]
         # batch x seqlen x 2*hid
         sent_output = torch.index_select(sent_output, 0, Variable(idx_unsort))
 
         if self.pool_type is None:
-            fwd_hidden = sent_output[:, 0, :self.enc_lstm.hidden_size]
-            bwd_hidden = sent_output[:, -1, self.enc_lstm.hidden_size:]
+            fwd_hidden = h_n[0]
+            bwd_hidden = h_n[1]
+
+            if (len(list(fwd_hidden.shape)) > 2):
+                fwd_hidden = fwd_hidden.squeeze(dim=0)
+                bwd_hidden = bwd_hidden.squeeze(dim=0)
+
             sent_output = torch.cat([fwd_hidden, bwd_hidden], dim=-1)
             sent_output = torch.index_select(sent_output, 0, Variable(idx_unsort))
             return sent_output

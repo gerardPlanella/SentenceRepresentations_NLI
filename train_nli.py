@@ -105,6 +105,8 @@ model = SentenceClassifier(len(vocab), params.embedding_dim, params.encoder_lstm
                            encoder_dropout=params.encoder_dropout, encoder_pooling=params.encoder_pooling
                            ).to(device)
 
+print(model)
+
 optimizer = optim.SGD(model.parameters(), lr = params.lr)
 scheduler = lr_scheduler.MultiplicativeLR(optimizer, lr_lambda, verbose = True)
 criterion = nn.CrossEntropyLoss()
