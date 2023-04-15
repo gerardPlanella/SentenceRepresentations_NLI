@@ -135,4 +135,4 @@ vocab.pickle
 # Remove useless out files
 *.out
 !runs/*.out
-!stored_runs/*.out
+!stored_slurms/*.out

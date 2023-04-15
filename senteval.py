@@ -7,11 +7,12 @@ import torch
 import os
 from models import *
 import argparse
+import sklearn
 from data import NLTKTokenizer, load_embeddings, pad
 from torch import nn
 
 # path to senteval
-senteval_path = '../'
+senteval_path = '../SentEval'
 
 encoders = {
     "AWESentenceEncoder":AWESentenceEncoder,
@@ -36,7 +37,7 @@ def create_dictionary(sentences, tokenizer_cls = NLTKTokenizer):
     words = {}
     for s in sentences:
         for word in s:
-            processed_word = tokenizer.encode(word).lower()
+            processed_word = tokenizer.encode(word)[0].lower()
             words[processed_word] = words.get(word, 0) + 1
 
     words['<s>'] = 1e9 + 4
@@ -98,7 +99,7 @@ def batcher(params, batch):
 
     x_embed = params.embed(x)
     embeddings = params.encoder(x_embed, seq_lens)
-    return embeddings
+    return embeddings.cpu().detach().numpy()
 
 
 logging.basicConfig(format='%(asctime)s : %(message)s', level=logging.DEBUG)
@@ -106,15 +107,9 @@ logging.basicConfig(format='%(asctime)s : %(message)s', level=logging.DEBUG)
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    
-    args = parser.parse_args()
-    args.usepytorch = False if not torch.cuda.is_available() else True
-    
-    
-
-    parser.add_argument("--data_path", type=str, default='../data/downstream')
+    parser.add_argument("--data_path", type=str, default='../SentEval/data/')
     parser.add_argument("--vocab_path", type=str, default="dataset/senteval_vocab.pickle")
-    parser.add_argument("--model_path", type=str, default="models/AWESentenceEncoder_300_0.58_2023-04-15-16-12-50.pt")
+    parser.add_argument("--model_path", type=str, default="models/AWESentenceEncoder_300_0.60_2023-04-15-16-47-23.pt")
     parser.add_argument("--embedding_path", type=str, default="dataset/glove.840B.300d.txt")
     parser.add_argument("--kfold", type=int, default=10)
     parser.add_argument("--tokenizer", type=str, default="nltk")
@@ -123,6 +118,11 @@ if __name__ == "__main__":
     parser.add_argument("--num_epochs", type=int, default=4)
     parser.add_argument("--optim", type=str, default="adam")
     parser.add_argument("--seed", type=int, default=1234, help="seed")
+
+    args = parser.parse_args()
+    
+
+
 
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     assert encoder_name in encoders
 
-    encoder = torch.load(args.model_path).encoder.to(device)
+    encoder = torch.load(args.model_path, map_location='cpu').encoder.to(device)
 
     print(encoder)
 
