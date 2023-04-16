@@ -119,6 +119,8 @@ def getEncoderName(model_path):
     return encoder_name
 
 
+logging.basicConfig(format='%(asctime)s : %(message)s', level=logging.DEBUG)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
