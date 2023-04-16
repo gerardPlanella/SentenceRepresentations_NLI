@@ -9,3 +9,5 @@ cd ..
 Run in python terminal:
 import nltk
 nltk.download('punkt')
+
+3. Change lines in senteval utils.py

@@ -94,7 +94,7 @@ vocab = None
 featureVectors = None
 if params.reload_dataset:
     dataset_vocab = dataset.get_vocab(splits=["train"], vocab_path=params.dataset_vocab_path, reload=True)
-    vocab, featureVectors = load_embeddings(path=params.embedding_path, tokenizer_cls=tokenizers[params.tokenizer], dataset_vocab=dataset_vocab, vocab_path=params.vocab_path, reload=True)
+    vocab, featureVectors = load_embeddings(path=params.embedding_path, tokenizer_cls=tokenizers[params.tokenizer], dataset_vocab=dataset_vocab, vocab_path=params.vocab_path, reload=True, use_tqdm=True)
     sys.exit()
 else:
     vocab, featureVectors = load_embeddings(path=params.embedding_path, tokenizer_cls=tokenizers[params.tokenizer], vocab_path=params.vocab_path, reload=False)

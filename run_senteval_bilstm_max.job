@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=3
 #SBATCH --time=18:00:00
 #SBATCH --mem=32000M
-#SBATCH --output=senteval_%A.out
+#SBATCH --output=senteval_bilstm_max_%A.out
 
 module purge
 module load 2021
@@ -15,4 +15,4 @@ module load Anaconda3/2021.05
 cd $HOME/SentenceRepresentations_NLI
 source activate dl2022
 # Run your code
-srun python senteval.py --usepytorch
+srun python senteval.py --usepytorch --model_path "models/BiLSTMEncoder_pooling-max_4096_0.80_2023-04-15-19-55-20.pt"

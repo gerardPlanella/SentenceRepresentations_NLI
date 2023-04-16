@@ -159,7 +159,7 @@ class Vocabulary:
 
 
 
-def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTokenizer, reduced_vocab = False, dataset_vocab = None, vocab_path = 'vocab.pickle', reload = False) -> Tuple[Vocabulary, FeatureVectors]:
+def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTokenizer, reduced_vocab = False, dataset_vocab = None, vocab_path = 'vocab.pickle', reload = False, save=True, use_tqdm = False) -> Tuple[Vocabulary, FeatureVectors]:
     if os.path.exists(vocab_path) and not reload:
        print("Loading saved Vocabulary from " + vocab_path)
        return load_vocab(vocab_path)
@@ -171,7 +171,9 @@ def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTo
     num_lines = sum(1 for line in open(path,'r'))
     idx = 0
     with open(path) as f:
-        for line in tqdm(f, total=num_lines):
+        if use_tqdm:
+            f = tqdm(f, total=num_lines)
+        for line in f:
             idx += 1
             elements = line.split(" ")
             token = elements[0]
@@ -193,8 +195,9 @@ def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTo
                 break
     vocab.build()
     featureVectors.build(vocab)
-    print("Saving vocabulary at " + vocab_path)
-    save_vocab(vocab, featureVectors, vocab_path)
+    if save:
+      print("Saving vocabulary at " + vocab_path)
+      save_vocab(vocab, featureVectors, vocab_path)
 
     return (vocab, featureVectors)
 

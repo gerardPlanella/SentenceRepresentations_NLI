@@ -71,7 +71,11 @@ def prepare(params, samples):
     remember to add what you model needs into the params dictionary
     """
     dataset_vocab = create_dictionary(samples, params.tokenizer_cls)
-    params.vocab, featureVectors = load_embeddings(path=params.embedding_path, tokenizer_cls=params.tokenizer_cls, dataset_vocab=dataset_vocab, vocab_path=params.vocab_path, reload=True)
+    params.vocab, featureVectors = load_embeddings(path=params.embedding_path, 
+                                                   tokenizer_cls=params.tokenizer_cls, 
+                                                   dataset_vocab=dataset_vocab, 
+                                                   vocab_path=params.vocab_path, 
+                                                   reload=True, save=False)
     vectors = torch.from_numpy(featureVectors.vectors)
     params.embed = nn.Embedding(len(params.vocab), params.embedding_dim)
     with torch.no_grad():
@@ -101,8 +105,19 @@ def batcher(params, batch):
     embeddings = params.encoder(x_embed, seq_lens)
     return embeddings.cpu().detach().numpy()
 
+def getEncoderName(model_path):
+    assert os.path.isfile(model_path)
 
-logging.basicConfig(format='%(asctime)s : %(message)s', level=logging.DEBUG)
+    encoder_name = model_path.split("/")[-1].split("_")[0]
+
+    assert encoder_name in encoders 
+
+    if encoder_name == "BiLSTMEncoder":
+        if model_path.split("/")[-1].split("_")[1].split("-")[0] == "pooling":
+            encoder_name = encoder_name + "_" + model_path.split("/")[-1].split("_")[1]
+    
+    return encoder_name
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -117,27 +132,13 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--num_epochs", type=int, default=4)
     parser.add_argument("--optim", type=str, default="adam")
-    parser.add_argument("--seed", type=int, default=1234, help="seed")
+    parser.add_argument("--results_path", type=str, default="results/")
 
     args = parser.parse_args()
-    
-
-
-
-    np.random.seed(args.seed)
-    torch.manual_seed(args.seed)
-    torch.cuda.manual_seed(args.seed)
-
-    torch.backends.cudnn.deterministic=True
-    torch.backends.cudnn.benchmark = False
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    assert os.path.isfile(args.model_path)
-
-    encoder_name = args.model_path.split("/")[-1].split("_")[0]
-
-    assert encoder_name in encoders
+    encoder_name = getEncoderName(args.model_path)
 
     encoder = torch.load(args.model_path, map_location='cpu').encoder.to(device)
 
@@ -160,4 +161,11 @@ if __name__ == "__main__":
                       'SICKEntailment', 'STS14']
 
     results = se.eval(transfer_tasks)
+
+    results_path = args.results_path 
+
+    if results_path[-1] != "/" and results_path[-1]:
+        results_path+="/"
+
+    torch.save(results, args.results_path + encoder_name + "_sentEval.pt")
     print(results)
