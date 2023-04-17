@@ -14,6 +14,8 @@ After trainig these models on the Stanford Natural Language Inference (SNLI) cor
 |-runs/:Directory containing Tensorboard logs for the SNLI training of the different models.
 |-analysis.ipynb: Jupyter Notebook containing result visualization and analysis.
 |-data.py: Contains definition of dataset, vocabulary, feature vectors and data loader functions
+|-environment.yml: Environment CPU only file.
+|-environmeny_gpu.yml: Environment for CUDA GPU enabled machined.
 |-evaluation.py: Contains evaluation functions for SNLI and model inference functions.
 |-models.py: Sentence Encoder and Classifier classes
 |-run_awe.job: Job file for running AWE training on the universities' GPU cluster Lisa.
@@ -37,9 +39,15 @@ After trainig these models on the Stanford Natural Language Inference (SNLI) cor
         cd ..
 ```
 2. Install Environment
+* For CPU Only:
 ```
         conda env create -f "environment.yml"
-        conda activate ATCS_1
+        conda activate ATCS
+```
+* For GPU:
+```
+        conda env create -f "environment_gpu.yml"
+        conda activate ATCS_GPU
 ```
 3. Download Pretrained models and Vocabulary files from #TODO: Add link
     * Copy the models, results folders and paste them to the repositorie's base folder.
