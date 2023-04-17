@@ -170,8 +170,8 @@ If you placed the SentEval repository at a level different to the repositorie's 
 The evaluation results will be saved in the results/ folder by default and can be modified with the --results_path argument.
 
 ## Author
-Gerard Planella Fontanillas
-Email: gerard.plfo@gmail.com
+Gerard Planella Fontanillas  
+Email: gerard.plfo@gmail.com  
 Email2: gerard.planella.fontanillas@student.uva.nl
 
 ## Acknowledgements
