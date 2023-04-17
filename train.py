@@ -1,5 +1,5 @@
 from data import prepare_minibatch, get_minibatch
-from evaluation import evaluate_minibatch
+from evaluation import evaluate_minibatch, test_model_snli
 import time
 from torch import optim
 import torch
@@ -94,17 +94,14 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
     
     print("Loading best model to test...")
 
-    model = torch.load(best_model_path)
-    _, _, test_acc, _ = eval_fn(
-            model, criterion, test_data, batch_size=batch_size,
-            batch_fn=batch_fn, prep_fn=prep_fn, device=device)
-    
+    test_acc = test_model_snli(best_model_path, test_data, criterion, batch_fn, prep_fn, eval_fn, batch_size, device, writer)
     print("Test Accuracy: " + str(test_acc))
-    if writer is not None:
-        writer.add_scalar("Test Accuracy", test_acc)
 
     return train_losses, val_losses, val_accuracies, test_acc
     
+
+
+ 
 
 def createCheckpointPathName(path, model, acc):
     if path[-1] != "/" and path[-1] != "\\":

@@ -253,9 +253,14 @@ def prepare_minibatch(mb, vocab, device):
     seq_len_hyp = torch.IntTensor(seq_len_hyp)
     seq_len_hyp = seq_len_hyp.to(device)
 
-    y = [ex["label"] for ex in mb]
-    y = torch.LongTensor(y)
-    y = y.to(device)
+    
+
+    y = [ex.get("label", None) for ex in mb]
+    if any(val is not None for val in y):
+      y = torch.LongTensor(y)
+      y = y.to(device)
+    else: 
+       y = None
 
     return (x_premise, seq_len_prem), (x_hypothesis, seq_len_hyp), y
 
