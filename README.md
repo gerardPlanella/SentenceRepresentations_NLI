@@ -8,28 +8,72 @@ This project aims is the first practical of the Advanced Topics in Computatonal 
 After trainig these models on the Stanford Natural Language Inference (SNLI) corpus, we will evaluate the obtained sentence representations on Facebook's SentEval evaluation framework. Which will apply our obtained models to different unseen transfer tasks. The goal is to reproduce the results found in the paper [Supervised Learning of Universal Sentence Representations from Natural Language Inference Data](https://aclanthology.org/D17-1070) (Conneau et al., EMNLP 2017).
 
 ## Code Structure
-|-dataset/: This folder is where we will save the pre-trained embeddings, the dataset vocabulary file and the vocabulary files. It should start empty.
-|-models/: This folder is where we will save the .pt checkpoint files for the different pretrained models, they can be found in the following Google drive folder.
-|-results/: Directory containing the saved results from SentEval.
-|-runs/:Directory containing Tensorboard logs for the SNLI training of the different models.
-|-analysis.ipynb: Jupyter Notebook containing result visualization and analysis.
-|-data.py: Contains definition of dataset, vocabulary, feature vectors and data loader functions
-|-environment.yml: Environment CPU only file.
-|-environmeny_gpu.yml: Environment for CUDA GPU enabled machined.
-|-evaluation.py: Contains evaluation functions for SNLI and model inference functions.
-|-models.py: Sentence Encoder and Classifier classes
-|-run_awe.job: Job file for running AWE training on the universities' GPU cluster Lisa.
-|-run_bilstm_max.job: Job file for running BiLSTM encoder with max pooling on Lisa.
-|-run_bilstm.job: Job file for running BiLSTM encoder on Lisa.
-|-run_change_dataset.job: Job file for updating dataset vocabulary files. Use it if you want to change dataset, tokenizer, or data percentage used. 
-|-run_lstm_max.job: Job file for running Unidirectional LSTM encoder on Lisa.
-|-run_senteval_awe.job: Job file for running SentEval evaluation for AWE encoder on Lisa.
-|-run_senteval_bilstm_max.job: Job file for running SentEval evaluation for BiLSTM encoder with max pooling on Lisa.
-|-run_senteval_bilstm.job: Job file for running SentEval evaluation for BiLSTM encoder on Lisa.
-|-run_senteval_lstm.job: Job file for running SentEval evaluation for LSTM encoder on Lisa.
-|-senteval.py: File used for model SentEval evaluation.
-|-train_nli.py: File used for model training on SNLI.
-|-train.py: File containing training functions used for training in train_nli.py.
+|- dataset/: 
+   This folder is where we will save the pre-trained embeddings, the dataset vocabulary file and the vocabulary files. It should start empty.
+
+|- models/: 
+   This folder is where we will save the .pt checkpoint files for the different pretrained models, they can be found in the following Google drive folder.
+
+|- results/: 
+   Directory containing the saved results from SentEval.
+
+|- runs/: 
+   Directory containing Tensorboard logs for the SNLI training of the different models.
+
+|- analysis.ipynb: 
+   Jupyter Notebook containing result visualization and analysis.
+
+|- data.py: 
+   Contains definition of dataset, vocabulary, feature vectors and data loader functions.
+
+|- environment.yml: 
+   Environment CPU only file.
+
+|- environment_gpu.yml: 
+   Environment for CUDA GPU enabled machined.
+
+|- evaluation.py: 
+   Contains evaluation functions for SNLI and model inference functions.
+
+|- models.py: 
+   Sentence Encoder and Classifier classes.
+
+|- run_awe.job: 
+   Job file for running AWE training on the universities' GPU cluster Lisa.
+
+|- run_bilstm_max.job: 
+   Job file for running BiLSTM encoder with max pooling on Lisa.
+
+|- run_bilstm.job: 
+   Job file for running BiLSTM encoder on Lisa.
+
+|- run_change_dataset.job: 
+   Job file for updating dataset vocabulary files. Use it if you want to change dataset, tokenizer, or data percentage used. 
+
+|- run_lstm_max.job: 
+   Job file for running Unidirectional LSTM encoder on Lisa.
+
+|- run_senteval_awe.job: 
+   Job file for running SentEval evaluation for AWE encoder on Lisa.
+
+|- run_senteval_bilstm_max.job: 
+   Job file for running SentEval evaluation for BiLSTM encoder with max pooling on Lisa.
+
+|- run_senteval_bilstm.job: 
+   Job file for running SentEval evaluation for BiLSTM encoder on Lisa.
+
+|- run_senteval_lstm.job: 
+   Job file for running SentEval evaluation for LSTM encoder on Lisa.
+
+|- senteval.py: 
+   File used for model SentEval evaluation.
+
+|- train_nli.py: 
+   File used for model training on SNLI.
+
+|- train.py: 
+   File containing training functions used for training in train_nli.py.
+
 
 ## Getting Started
 1. Download GloVe embeddings
