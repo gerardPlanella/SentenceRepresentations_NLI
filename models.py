@@ -12,17 +12,29 @@ class BaseSentenceEncoder(nn.Module):
         pass
 
 class SentenceClassifier(nn.Module):
-    def __init__(self, vocab_size, embedding_dim, encoder_hidden_dim, classifier_hidden_dim, vocab, featureVectors, encoderType:BaseSentenceEncoder, encoder_dropout = 0, encoder_pooling = None) -> None:
+    def __init__(self, vocab_size, embedding_dim, encoder_hidden_dim, classifier_hidden_dim, vocab, featureVectors, encoderType:BaseSentenceEncoder, encoder_dropout = 0, encoder_pooling = None, complex = False) -> None:
         super(SentenceClassifier, self).__init__()
         self.vocab = vocab
         self.embed = nn.Embedding(vocab_size, embedding_dim)
+        self.complex = complex
         if encoderType == BiLSTMEncoder:
             self.encoder = encoderType(embedding_dim, encoder_hidden_dim, encoder_dropout, encoder_pooling)
         else:
             self.encoder = encoderType(embedding_dim, encoder_hidden_dim, encoder_dropout)
 
-        self.linear_1 = nn.Linear(self.encoder.out_dim * 4, classifier_hidden_dim)
-        self.linear_2 = nn.Linear(classifier_hidden_dim, 3)
+        if self.complex:
+            self.layers = nn.Sequential(
+                nn.Linear(self.encoder.out_dim * 4, classifier_hidden_dim),
+                nn.Tanh(),
+                nn.Linear(classifier_hidden_dim, classifier_hidden_dim),
+                nn.Tanh(),
+                nn.Linear(classifier_hidden_dim, 3))
+        else:
+            self.layers = nn.Sequential(
+                nn.Linear(self.encoder.out_dim * 4, classifier_hidden_dim),
+                nn.Linear(classifier_hidden_dim, classifier_hidden_dim),
+                nn.Linear(classifier_hidden_dim, 3)
+            )
 
         with torch.no_grad():
             self.embed.weight.data.copy_(featureVectors)
@@ -42,10 +54,9 @@ class SentenceClassifier(nn.Module):
         sub = torch.abs(u - v)
 
         combination = torch.cat((u, v, sub, prod), 1) 
-        out1 = self.linear_1(combination)
-        out2 = self.linear_2(out1)
-        
-        return out2
+
+        out = self.layers(combination)
+        return out
 
 
 class AWESentenceEncoder(BaseSentenceEncoder):

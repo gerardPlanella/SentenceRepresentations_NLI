@@ -53,6 +53,7 @@ parser.add_argument("--batch_size", type=int, default=64)
 parser.add_argument("--eval_batch_size", type=int, default=None)
 parser.add_argument("--tensorboard_dir", type = str, default = "runs/")
 parser.add_argument("--lr_factor", type = float, default=5)
+parser.add_argument("--complex_model", action='store_true')
 
 
 parser.add_argument("--seed", type=int, default=1234, help="seed")
@@ -85,6 +86,9 @@ logdir = params.tensorboard_dir + encoders[params.encoder].__name__ + "_" + str(
 if params.encoder == "bilstm" and params.encoder_pooling is not None:
     logdir += f"_pooling-{params.encoder_pooling}"
 
+if params.complex_model:
+    logdir += "_complex"
+
 logdir += f"_{d.now().strftime('%Y-%m-%d-%H-%M-%S')}"
 
 writer = SummaryWriter(logdir)
@@ -93,7 +97,7 @@ dataset = CustomDataset(data_percentage=params.data_percentage, tokenizer_cls=to
 vocab = None
 featureVectors = None
 if params.reload_dataset:
-    dataset_vocab = dataset.get_vocab(splits=["train"], vocab_path=params.dataset_vocab_path, reload=True)
+    dataset_vocab = dataset.get_vocab(vocab_path=params.dataset_vocab_path, reload=True)
     vocab, featureVectors = load_embeddings(path=params.embedding_path, tokenizer_cls=tokenizers[params.tokenizer], dataset_vocab=dataset_vocab, vocab_path=params.vocab_path, reload=True, use_tqdm=True)
     sys.exit()
 else:
@@ -102,7 +106,8 @@ vectors = torch.from_numpy(featureVectors.vectors).to(device)
 
 model = SentenceClassifier(len(vocab), params.embedding_dim, params.encoder_lstm_dim, 
                            params.classifier_fc_dim, vocab, vectors, encoders[params.encoder], 
-                           encoder_dropout=params.encoder_dropout, encoder_pooling=params.encoder_pooling
+                           encoder_dropout=params.encoder_dropout, encoder_pooling=params.encoder_pooling,
+                           complex=params.complex_model
                            ).to(device)
 
 print(model)

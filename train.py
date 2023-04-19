@@ -80,7 +80,7 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
             print("new highscore")
             best_eval = dev_acc
             best_iter = epoch
-            best_model_path = createCheckpointPathName(checkpoint_path, model.encoder, dev_acc)
+            best_model_path = createCheckpointPathName(checkpoint_path, model.encoder, dev_acc, model.complex)
             torch.save(model, best_model_path)
             optimizer.param_groups[0]['lr'] /= lr_factor
 
@@ -103,7 +103,7 @@ def train_model(model, dataset, optimizer, criterion ,scheduler, num_epochs,
 
  
 
-def createCheckpointPathName(path, model, acc):
+def createCheckpointPathName(path, model, acc, complex):
     if path[-1] != "/" and path[-1] != "\\":
         path = path + "/"
 
@@ -114,4 +114,8 @@ def createCheckpointPathName(path, model, acc):
             name = name + "_pooling-" + model.pool_type
     date = d.now().strftime("%Y-%m-%d-%H-%M-%S")
 
-    return path + name +"_" + str(model.out_dim) +"_"+f"{acc:.2f}" +"_" + date + ".pt"
+    if not complex:
+        return path + name +"_" + str(model.out_dim) +"_"+f"{acc:.2f}" +"_" + date + ".pt"
+    else:
+        return path + name +"_complex_" +  str(model.out_dim) +"_"+f"{acc:.2f}" +"_" + date + ".pt"
+    

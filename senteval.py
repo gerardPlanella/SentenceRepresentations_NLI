@@ -10,6 +10,7 @@ import argparse
 import sklearn
 from data import NLTKTokenizer, load_embeddings, pad
 from torch import nn
+from datetime import datetime as d
 
 # path to senteval
 senteval_path = '../SentEval'
@@ -144,6 +145,8 @@ if __name__ == "__main__":
 
     encoder = torch.load(args.model_path, map_location='cpu').encoder.to(device)
 
+    complex_model = args.model_path.find("complex") > -1
+
     print(encoder)
 
     params_senteval = {'task_path': args.data_path, 'usepytorch': args.usepytorch, 'kfold': args.kfold,
@@ -169,5 +172,7 @@ if __name__ == "__main__":
     if results_path[-1] != "/" and results_path[-1]:
         results_path+="/"
 
-    torch.save(results, args.results_path + encoder_name + "_sentEval.pt")
+    if complex_model:
+        encoder_name += "_complex"
+    torch.save(results, args.results_path + encoder_name + f"_sentEval_{d.now().strftime('%Y-%m-%d-%H-%M-%S')}.pt")
     print(results)
