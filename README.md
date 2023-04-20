@@ -8,26 +8,28 @@ This project aims is the first practical of the Advanced Topics in Computatonal 
 After trainig these models on the Stanford Natural Language Inference (SNLI) corpus, we will evaluate the obtained sentence representations on Facebook's SentEval evaluation framework. Which will apply our obtained models to different unseen transfer tasks. The goal is to reproduce the results found in the paper [Supervised Learning of Universal Sentence Representations from Natural Language Inference Data](https://aclanthology.org/D17-1070) (Conneau et al., EMNLP 2017).
 
 ## Code Structure
+(Folders not present found in the following drive [folder](https://drive.google.com/drive/folders/1PuZEuPfDnWn2QKaTH3KOP8KGwctU2-9S?usp=sharing))
 |-dataset/: This folder is where we will save the pre-trained embeddings, the dataset vocabulary file and the vocabulary files. It should start empty.  
 |-models/: This folder is where we will save the .pt checkpoint files for the different pretrained models, they can be found in the following Google drive folder.  
 |-results/: Directory containing the saved results from SentEval for nonlinear_3.  
-|-results_linear_2/: Directory containing the saved results from SentEval for linear_2. 
-|-results_linear_3/: Directory containing the saved results from SentEval for linear_3. 
-|-results_nonlinear_4/: Directory containing the saved results from SentEval for nonlinear_4. 
-|-runs/:Directory containing Tensorboard logs for the SNLI training of the nonlinear_3 model.  
-|-runs_linear_2/:Directory containing Tensorboard logs for the SNLI training of the linear_2 model. 
-|-runs_linear_3/:Directory containing Tensorboard logs for the SNLI training of linear_3 model. 
-|-runs_nonlinear_4/:Directory containing Tensorboard logs for the SNLI training of nonlinear_4 model. 
+|-results_linear_2/: Directory containing the saved results from SentEval for linear_2.   
+|-results_linear_3/: Directory containing the saved results from SentEval for linear_3.   
+|-results_nonlinear_4/: Directory containing the saved results from SentEval for nonlinear_4.   
+|-runs/: Directory containing Tensorboard logs for the SNLI training of the nonlinear_3 model.  
+|-runs_linear_2/: Directory containing Tensorboard logs for the SNLI training of the linear_2 model.   
+|-runs_linear_3/: Directory containing Tensorboard logs for the SNLI training of linear_3 model.   
+|-runs_nonlinear_4/: Directory containing Tensorboard logs for the SNLI training of nonlinear_4 model.   
 |-analysis.ipynb: Jupyter Notebook containing result visualization and analysis.  
-|-data.py: Contains definition of dataset, vocabulary, feature vectors and data loader functions  
+|-data.py: Contains definition of dataset, vocabulary, feature vectors and data loader functions.  
 |-environment.yml: Environment CPU only file.  
-|-environmeny_gpu.yml: Environment for CUDA GPU enabled machined.  
+|-environment_gpu.yml: Environment for CUDA GPU enabled machines.  
 |-evaluation.py: Contains evaluation functions for SNLI and model inference functions.  
-|-models.py: Sentence Encoder and Classifier classes  
-|-jobs/: Folder Containing Job files for Lisa Cluster.
+|-models.py: Sentence Encoder and Classifier classes.  
+|-jobs/: Folder Containing Job files for Lisa Cluster.  
 |-senteval.py: File used for model SentEval evaluation.  
 |-train_nli.py: File used for model training on SNLI.  
-|-train.py: File containing training functions used for training in train_nli.py.  
+|-train.py: File containing training functions used for training in train_nli.py.
+
 
 ## Getting Started
 1. Download GloVe embeddings
