@@ -1,0 +1,111 @@
+[nltk_data] Downloading package punkt to /home/lcur1136/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+Found cached dataset snli (/home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b)
+Models running on device:  cuda
+  0%|          | 0/3 [00:00<?, ?it/s]100%|██████████| 3/3 [00:00<00:00, 71.11it/s]
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-26da30925fbad333.arrow
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-030550b06704f0a9.arrow
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-5f71913ab959d4e9.arrow
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-d4ba7e085145c696.arrow
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-a34bde53a6f7997e.arrow
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-a056c3b7d52f421a.arrow
+Loading saved Vocabulary from dataset/vocab.pickle
+SentenceClassifier(
+  (embed): Embedding(33146, 300)
+  (encoder): AWESentenceEncoder()
+  (layers): Sequential(
+    (0): Linear(in_features=1200, out_features=512, bias=True)
+    (1): Tanh()
+    (2): Linear(in_features=512, out_features=512, bias=True)
+    (3): Tanh()
+    (4): Linear(in_features=512, out_features=3, bias=True)
+  )
+)
+Adjusting learning rate of group 0 to 1.0000e-01.
+  0%|          | 0/20 [00:00<?, ?it/s]  5%|▌         | 1/20 [02:14<42:34, 134.42s/it] 10%|█         | 2/20 [04:28<40:10, 133.93s/it] 15%|█▌        | 3/20 [06:39<37:38, 132.84s/it] 20%|██        | 4/20 [08:52<35:24, 132.80s/it] 25%|██▌       | 5/20 [11:07<33:23, 133.57s/it] 25%|██▌       | 5/20 [13:18<39:54, 159.64s/it]
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 8121.03352701664
+Validation Loss: 137.05355834960938
+Validation Accuracy: 0.5981507823613087
+new highscore
+Adjusting learning rate of group 0 to 1.9800e-02.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7639.919963955879
+Validation Loss: 135.72720336914062
+Validation Accuracy: 0.6015037593984962
+new highscore
+Adjusting learning rate of group 0 to 3.9204e-03.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7588.638361930847
+Validation Loss: 135.08482360839844
+Validation Accuracy: 0.6043487096118675
+new highscore
+Adjusting learning rate of group 0 to 7.7624e-04.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7578.6902495622635
+Validation Loss: 135.12042236328125
+Validation Accuracy: 0.604551920341394
+new highscore
+Adjusting learning rate of group 0 to 1.5370e-04.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7576.61178445816
+Validation Loss: 135.05140686035156
+Validation Accuracy: 0.604958341800447
+new highscore
+Adjusting learning rate of group 0 to 3.0432e-05.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7576.244579792023
+Validation Loss: 135.0711669921875
+Validation Accuracy: 0.6055679739890266
+new highscore
+Training stopped due to LR limit.
+Loading best model to test...
+Test Accuracy: 0.6078990228013029

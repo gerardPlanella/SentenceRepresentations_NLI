@@ -1,0 +1,265 @@
+[nltk_data] Downloading package punkt to /home/lcur1136/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+Found cached dataset snli (/home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b)
+Models running on device:  cuda
+  0%|          | 0/3 [00:00<?, ?it/s]100%|██████████| 3/3 [00:00<00:00, 64.68it/s]
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-26da30925fbad333.arrow
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-030550b06704f0a9.arrow
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-5f71913ab959d4e9.arrow
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-d4ba7e085145c696.arrow
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-a34bde53a6f7997e.arrow
+Loading cached processed dataset at /home/lcur1136/.cache/huggingface/datasets/snli/plain_text/1.0.0/1f60b67533b65ae0275561ff7828aad5ee4282d0e6f844fd148d05d3c6ea251b/cache-a056c3b7d52f421a.arrow
+Loading saved Vocabulary from dataset/vocab.pickle
+SentenceClassifier(
+  (embed): Embedding(33146, 300)
+  (encoder): AWESentenceEncoder()
+  (layers): Sequential(
+    (0): Linear(in_features=1200, out_features=512, bias=True)
+    (1): Linear(in_features=512, out_features=512, bias=True)
+    (2): Linear(in_features=512, out_features=3, bias=True)
+  )
+)
+Adjusting learning rate of group 0 to 1.0000e-01.
+  0%|          | 0/20 [00:00<?, ?it/s]  5%|▌         | 1/20 [01:57<37:18, 117.81s/it] 10%|█         | 2/20 [03:55<35:23, 117.95s/it] 15%|█▌        | 3/20 [05:53<33:24, 117.90s/it] 20%|██        | 4/20 [07:51<31:28, 118.06s/it] 25%|██▌       | 5/20 [09:50<29:31, 118.11s/it] 30%|███       | 6/20 [11:48<27:32, 118.07s/it] 35%|███▌      | 7/20 [13:46<25:36, 118.20s/it] 40%|████      | 8/20 [15:44<23:38, 118.22s/it] 45%|████▌     | 9/20 [17:41<21:33, 117.56s/it] 50%|█████     | 10/20 [19:39<19:37, 117.79s/it] 55%|█████▌    | 11/20 [21:37<17:41, 117.99s/it] 60%|██████    | 12/20 [23:36<15:45, 118.13s/it] 65%|██████▌   | 13/20 [25:34<13:47, 118.29s/it] 70%|███████   | 14/20 [27:33<11:50, 118.38s/it] 75%|███████▌  | 15/20 [29:31<09:51, 118.21s/it] 80%|████████  | 16/20 [31:29<07:52, 118.21s/it] 85%|████████▌ | 17/20 [33:28<05:54, 118.32s/it] 85%|████████▌ | 17/20 [35:27<06:15, 125.15s/it]
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 8120.724667489529
+Validation Loss: 137.84518432617188
+Validation Accuracy: 0.5896159317211949
+new highscore
+Adjusting learning rate of group 0 to 1.9800e-02.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7642.680591166019
+Validation Loss: 135.30007934570312
+Validation Accuracy: 0.6036374720585247
+new highscore
+Adjusting learning rate of group 0 to 3.9204e-03.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7592.427780866623
+Validation Loss: 135.3937530517578
+Validation Accuracy: 0.6000812842918106
+Adjusting learning rate of group 0 to 3.8812e-03.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7585.852406442165
+Validation Loss: 135.0794219970703
+Validation Accuracy: 0.6039422881528145
+new highscore
+Adjusting learning rate of group 0 to 7.6848e-04.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7576.174957334995
+Validation Loss: 134.99415588378906
+Validation Accuracy: 0.6039422881528145
+Adjusting learning rate of group 0 to 7.6079e-04.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7575.020645141602
+Validation Loss: 135.0071563720703
+Validation Accuracy: 0.6033326559642349
+Adjusting learning rate of group 0 to 7.5318e-04.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7573.733800709248
+Validation Loss: 134.95176696777344
+Validation Accuracy: 0.6029262345051819
+Adjusting learning rate of group 0 to 7.4565e-04.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7572.703334391117
+Validation Loss: 134.9151153564453
+Validation Accuracy: 0.6036374720585247
+Adjusting learning rate of group 0 to 7.3820e-04.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7571.695059537888
+Validation Loss: 135.0418243408203
+Validation Accuracy: 0.6017069701280228
+Adjusting learning rate of group 0 to 7.3081e-04.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7570.799053907394
+Validation Loss: 134.89801025390625
+Validation Accuracy: 0.6040438935175777
+new highscore
+Adjusting learning rate of group 0 to 1.4470e-04.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7568.899108171463
+Validation Loss: 134.89385986328125
+Validation Accuracy: 0.604145498882341
+new highscore
+Adjusting learning rate of group 0 to 2.8651e-05.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7568.544687092304
+Validation Loss: 134.89309692382812
+Validation Accuracy: 0.6038406827880513
+Adjusting learning rate of group 0 to 2.8364e-05.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7568.469118535519
+Validation Loss: 134.8870849609375
+Validation Accuracy: 0.6037390774232879
+Adjusting learning rate of group 0 to 2.8081e-05.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7568.479215562344
+Validation Loss: 134.8976593017578
+Validation Accuracy: 0.6038406827880513
+Adjusting learning rate of group 0 to 2.7800e-05.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7568.395304560661
+Validation Loss: 134.89967346191406
+Validation Accuracy: 0.6035358666937615
+Adjusting learning rate of group 0 to 2.7522e-05.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7568.383110284805
+Validation Loss: 134.89404296875
+Validation Accuracy: 0.604145498882341
+Adjusting learning rate of group 0 to 2.7247e-05.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7568.343432605267
+Validation Loss: 134.8904266357422
+Validation Accuracy: 0.6033326559642349
+Adjusting learning rate of group 0 to 2.6974e-05.
+Shuffling training data
+Batch number 1000
+Batch number 2000
+Batch number 3000
+Batch number 4000
+Batch number 5000
+Batch number 6000
+Batch number 7000
+Batch number 8000
+Training Loss: 7568.265818417072
+Validation Loss: 134.88011169433594
+Validation Accuracy: 0.6042471042471043
+new highscore
+Training stopped due to LR limit.
+Loading best model to test...
+Test Accuracy: 0.6077972312703583

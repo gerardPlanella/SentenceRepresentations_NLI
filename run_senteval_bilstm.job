@@ -15,4 +15,4 @@ module load Anaconda3/2021.05
 cd $HOME/SentenceRepresentations_NLI
 source activate dl2022
 # Run your code
-srun python senteval.py --usepytorch --model_path "models/BiLSTMEncoder_4096_0.73_2023-04-15-18-23-21.pt"
+srun python senteval.py --usepytorch --model_path "models/BiLSTMEncoder_4096_0.73_2023-04-19-18-49-18.pt"

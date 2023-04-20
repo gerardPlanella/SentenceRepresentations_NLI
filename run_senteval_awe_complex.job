@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=3
 #SBATCH --time=18:00:00
 #SBATCH --mem=32000M
-#SBATCH --output=senteval_lstm_%A.out
+#SBATCH --output=senteval_awe_complex_%A.out
 
 module purge
 module load 2021
@@ -15,4 +15,4 @@ module load Anaconda3/2021.05
 cd $HOME/SentenceRepresentations_NLI
 source activate dl2022
 # Run your code
-srun python senteval.py --usepytorch --model_path "models/LSTMEncoder_2048_0.72_2023-04-19-16-37-13.pt"
+srun python senteval.py --usepytorch --model_path "models/AWESentenceEncoder_complex_300_0.61_2023-04-19-15-56-22.pt"

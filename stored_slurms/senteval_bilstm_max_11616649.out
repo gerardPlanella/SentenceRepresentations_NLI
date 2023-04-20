@@ -1,0 +1,173 @@
+2023-04-20 06:05:26,042 : ***** Transfer task : MR *****
+
+
+2023-04-20 06:08:29,249 : Generating sentence embeddings
+2023-04-20 06:08:31,494 : Generated sentence embeddings
+2023-04-20 06:08:31,495 : Training pytorch-MLP-nhid0-adam-bs64 with (inner) 10-fold cross-validation
+2023-04-20 06:11:27,274 : Best param found at split 1: l2reg = 1e-05                 with score 73.28
+2023-04-20 06:14:27,248 : Best param found at split 2: l2reg = 1e-05                 with score 73.54
+2023-04-20 06:17:24,928 : Best param found at split 3: l2reg = 0.0001                 with score 72.98
+2023-04-20 06:20:22,222 : Best param found at split 4: l2reg = 0.0001                 with score 73.26
+2023-04-20 06:23:14,613 : Best param found at split 5: l2reg = 1e-05                 with score 73.02
+2023-04-20 06:26:25,270 : Best param found at split 6: l2reg = 1e-05                 with score 73.43
+2023-04-20 06:29:21,593 : Best param found at split 7: l2reg = 0.0001                 with score 73.14
+2023-04-20 06:32:32,206 : Best param found at split 8: l2reg = 0.0001                 with score 73.38
+2023-04-20 06:35:27,024 : Best param found at split 9: l2reg = 0.0001                 with score 73.18
+2023-04-20 06:38:21,168 : Best param found at split 10: l2reg = 0.0001                 with score 73.09
+2023-04-20 06:38:25,504 : Dev acc : 73.23 Test acc : 72.26
+
+2023-04-20 06:38:25,510 : ***** Transfer task : CR *****
+
+
+2023-04-20 06:41:13,120 : Generating sentence embeddings
+2023-04-20 06:41:13,836 : Generated sentence embeddings
+2023-04-20 06:41:13,836 : Training pytorch-MLP-nhid0-adam-bs64 with (inner) 10-fold cross-validation
+2023-04-20 06:42:19,706 : Best param found at split 1: l2reg = 0.0001                 with score 79.54
+2023-04-20 06:43:22,615 : Best param found at split 2: l2reg = 0.0001                 with score 79.6
+2023-04-20 06:44:26,927 : Best param found at split 3: l2reg = 0.0001                 with score 79.72
+2023-04-20 06:45:32,162 : Best param found at split 4: l2reg = 1e-05                 with score 79.86
+2023-04-20 06:46:35,308 : Best param found at split 5: l2reg = 0.0001                 with score 79.66
+2023-04-20 06:47:40,331 : Best param found at split 6: l2reg = 1e-05                 with score 79.22
+2023-04-20 06:48:46,321 : Best param found at split 7: l2reg = 1e-05                 with score 79.81
+2023-04-20 06:49:50,858 : Best param found at split 8: l2reg = 0.0001                 with score 79.69
+2023-04-20 06:50:53,174 : Best param found at split 9: l2reg = 0.0001                 with score 78.96
+2023-04-20 06:51:57,293 : Best param found at split 10: l2reg = 1e-05                 with score 80.11
+2023-04-20 06:51:59,281 : Dev acc : 79.62 Test acc : 78.44
+
+2023-04-20 06:51:59,282 : ***** Transfer task : SUBJ *****
+
+
+2023-04-20 06:54:59,142 : Generating sentence embeddings
+2023-04-20 06:55:01,157 : Generated sentence embeddings
+2023-04-20 06:55:01,158 : Training pytorch-MLP-nhid0-adam-bs64 with (inner) 10-fold cross-validation
+2023-04-20 06:57:57,819 : Best param found at split 1: l2reg = 1e-05                 with score 89.94
+2023-04-20 07:01:04,318 : Best param found at split 2: l2reg = 1e-05                 with score 90.23
+2023-04-20 07:04:07,030 : Best param found at split 3: l2reg = 1e-05                 with score 90.27
+2023-04-20 07:07:05,543 : Best param found at split 4: l2reg = 1e-05                 with score 90.18
+2023-04-20 07:10:06,130 : Best param found at split 5: l2reg = 1e-05                 with score 90.4
+2023-04-20 07:13:00,503 : Best param found at split 6: l2reg = 1e-05                 with score 90.11
+2023-04-20 07:16:03,188 : Best param found at split 7: l2reg = 1e-05                 with score 90.38
+2023-04-20 07:19:05,341 : Best param found at split 8: l2reg = 1e-05                 with score 90.04
+2023-04-20 07:22:05,560 : Best param found at split 9: l2reg = 1e-05                 with score 90.12
+2023-04-20 07:25:02,639 : Best param found at split 10: l2reg = 1e-05                 with score 90.03
+2023-04-20 07:25:07,008 : Dev acc : 90.17 Test acc : 89.84
+
+2023-04-20 07:25:07,010 : ***** Transfer task : MPQA *****
+
+
+2023-04-20 07:27:51,472 : Generating sentence embeddings
+2023-04-20 07:27:52,217 : Generated sentence embeddings
+2023-04-20 07:27:52,218 : Training pytorch-MLP-nhid0-adam-bs64 with (inner) 10-fold cross-validation
+2023-04-20 07:30:40,457 : Best param found at split 1: l2reg = 1e-05                 with score 84.95
+2023-04-20 07:33:30,586 : Best param found at split 2: l2reg = 1e-05                 with score 84.75
+2023-04-20 07:36:22,992 : Best param found at split 3: l2reg = 1e-05                 with score 84.52
+2023-04-20 07:39:12,705 : Best param found at split 4: l2reg = 1e-05                 with score 84.6
+2023-04-20 07:42:07,169 : Best param found at split 5: l2reg = 0.0001                 with score 84.56
+2023-04-20 07:45:07,805 : Best param found at split 6: l2reg = 1e-05                 with score 84.96
+2023-04-20 07:47:51,516 : Best param found at split 7: l2reg = 0.0001                 with score 84.68
+2023-04-20 07:50:40,759 : Best param found at split 8: l2reg = 0.0001                 with score 84.6
+2023-04-20 07:53:28,102 : Best param found at split 9: l2reg = 1e-05                 with score 84.57
+2023-04-20 07:56:28,380 : Best param found at split 10: l2reg = 1e-05                 with score 84.84
+2023-04-20 07:56:33,323 : Dev acc : 84.7 Test acc : 84.12
+
+2023-04-20 07:56:33,325 : ***** Transfer task : SST Binary classification *****
+
+
+2023-04-20 07:59:53,064 : Computing embedding for train
+2023-04-20 08:00:01,025 : Computed train embeddings
+2023-04-20 08:00:01,025 : Computing embedding for dev
+2023-04-20 08:00:01,240 : Computed dev embeddings
+2023-04-20 08:00:01,240 : Computing embedding for test
+2023-04-20 08:00:01,545 : Computed test embeddings
+2023-04-20 08:00:01,545 : Training pytorch-MLP-nhid0-adam-bs64 with standard validation..
+2023-04-20 08:01:49,943 : [('reg:1e-05', 77.52), ('reg:0.0001', 77.87), ('reg:0.001', 76.61), ('reg:0.01', 73.74)]
+2023-04-20 08:01:49,943 : Validation : best param found is reg = 0.0001 with score             77.87
+2023-04-20 08:01:49,944 : Evaluating...
+2023-04-20 08:02:17,045 : 
+Dev acc : 77.87 Test acc : 77.21 for             SST Binary classification
+
+2023-04-20 08:02:17,047 : ***** Transfer task : TREC *****
+
+
+2023-04-20 08:05:05,187 : Computed train embeddings
+2023-04-20 08:05:05,237 : Computed test embeddings
+2023-04-20 08:05:05,238 : Training pytorch-MLP-nhid0-adam-bs64 with 10-fold cross-validation
+2023-04-20 08:07:10,563 : [('reg:1e-05', 73.13), ('reg:0.0001', 72.07), ('reg:0.001', 67.61), ('reg:0.01', 55.8)]
+2023-04-20 08:07:10,563 : Cross-validation : best param found is reg = 1e-05             with score 73.13
+2023-04-20 08:07:10,564 : Evaluating...
+2023-04-20 08:07:13,738 : 
+Dev acc : 73.13 Test acc : 75.2             for TREC
+
+2023-04-20 08:07:13,739 : ***** Transfer task : MRPC *****
+
+
+2023-04-20 08:10:12,178 : Computing embedding for train
+2023-04-20 08:10:13,758 : Computed train embeddings
+2023-04-20 08:10:13,758 : Computing embedding for test
+2023-04-20 08:10:14,413 : Computed test embeddings
+2023-04-20 08:10:14,575 : Training pytorch-MLP-nhid0-adam-bs64 with 10-fold cross-validation
+2023-04-20 08:11:24,439 : [('reg:1e-05', 73.95), ('reg:0.0001', 73.7), ('reg:0.001', 73.68), ('reg:0.01', 71.76)]
+2023-04-20 08:11:24,440 : Cross-validation : best param found is reg = 1e-05             with score 73.95
+2023-04-20 08:11:24,440 : Evaluating...
+2023-04-20 08:11:26,153 : Dev acc : 73.95 Test acc 72.87; Test F1 81.46 for MRPC.
+
+2023-04-20 08:11:26,155 : ***** Transfer task : SICK-Relatedness*****
+
+
+2023-04-20 08:14:18,064 : Computing embedding for train
+2023-04-20 08:14:19,125 : Computed train embeddings
+2023-04-20 08:14:19,126 : Computing embedding for dev
+2023-04-20 08:14:19,254 : Computed dev embeddings
+2023-04-20 08:14:19,254 : Computing embedding for test
+2023-04-20 08:14:20,365 : Computed test embeddings
+2023-04-20 08:14:39,206 : Dev : Pearson 0.8399843681720919
+2023-04-20 08:14:39,207 : Test : Pearson 0.8502841131338447 Spearman 0.7909645021452062 MSE 0.2848995148530221                        for SICK Relatedness
+
+2023-04-20 08:14:39,209 : ***** Transfer task : SICK-Entailment*****
+
+
+2023-04-20 08:17:29,703 : Computing embedding for train
+2023-04-20 08:17:30,780 : Computed train embeddings
+2023-04-20 08:17:30,780 : Computing embedding for dev
+2023-04-20 08:17:30,909 : Computed dev embeddings
+2023-04-20 08:17:30,909 : Computing embedding for test
+2023-04-20 08:17:32,014 : Computed test embeddings
+2023-04-20 08:17:32,284 : Training pytorch-MLP-nhid0-adam-bs64 with standard validation..
+2023-04-20 08:17:42,316 : [('reg:1e-05', 83.2), ('reg:0.0001', 82.8), ('reg:0.001', 82.6), ('reg:0.01', 78.0)]
+2023-04-20 08:17:42,316 : Validation : best param found is reg = 1e-05 with score             83.2
+2023-04-20 08:17:42,316 : Evaluating...
+2023-04-20 08:17:44,911 : 
+Dev acc : 83.2 Test acc : 82.95 for                        SICK entailment
+
+2023-04-20 08:17:44,914 : ***** Transfer task : STS14 *****
+
+
+/home/lcur1136/SentenceRepresentations_NLI/../SentEval/senteval/sts.py:42: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  sent1 = np.array([s.split() for s in sent1])[not_empty_idx]
+/home/lcur1136/SentenceRepresentations_NLI/../SentEval/senteval/sts.py:43: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+  sent2 = np.array([s.split() for s in sent2])[not_empty_idx]
+2023-04-20 08:20:34,670 : deft-forum : pearson = 0.3846, spearman = 0.3802
+2023-04-20 08:20:34,829 : deft-news : pearson = 0.6895, spearman = 0.6392
+2023-04-20 08:20:35,048 : headlines : pearson = 0.5689, spearman = 0.5425
+2023-04-20 08:20:35,281 : images : pearson = 0.7306, spearman = 0.7117
+2023-04-20 08:20:35,505 : OnWN : pearson = 0.4851, spearman = 0.5374
+2023-04-20 08:20:35,767 : tweet-news : pearson = 0.6611, spearman = 0.6206
+2023-04-20 08:20:35,767 : ALL (weighted average) : Pearson = 0.5905,             Spearman = 0.5792
+2023-04-20 08:20:35,767 : ALL (average) : Pearson = 0.5866,             Spearman = 0.5719
+
+BiLSTMEncoder(
+  (enc_lstm): LSTM(300, 2048, bidirectional=True)
+)
+Starting evaluation...
+Loading embeddings from dataset/glove.840B.300d.txt, tokenizing with <class 'data.NLTKTokenizer'>.
+Loading embeddings from dataset/glove.840B.300d.txt, tokenizing with <class 'data.NLTKTokenizer'>.
+Loading embeddings from dataset/glove.840B.300d.txt, tokenizing with <class 'data.NLTKTokenizer'>.
+Loading embeddings from dataset/glove.840B.300d.txt, tokenizing with <class 'data.NLTKTokenizer'>.
+Loading embeddings from dataset/glove.840B.300d.txt, tokenizing with <class 'data.NLTKTokenizer'>.
+Loading embeddings from dataset/glove.840B.300d.txt, tokenizing with <class 'data.NLTKTokenizer'>.
+Loading embeddings from dataset/glove.840B.300d.txt, tokenizing with <class 'data.NLTKTokenizer'>.
+Loading embeddings from dataset/glove.840B.300d.txt, tokenizing with <class 'data.NLTKTokenizer'>.
+Loading embeddings from dataset/glove.840B.300d.txt, tokenizing with <class 'data.NLTKTokenizer'>.
+Loading embeddings from dataset/glove.840B.300d.txt, tokenizing with <class 'data.NLTKTokenizer'>.
+{'MR': {'devacc': 73.23, 'acc': 72.26, 'ndev': 10662, 'ntest': 10662}, 'CR': {'devacc': 79.62, 'acc': 78.44, 'ndev': 3775, 'ntest': 3775}, 'SUBJ': {'devacc': 90.17, 'acc': 89.84, 'ndev': 10000, 'ntest': 10000}, 'MPQA': {'devacc': 84.7, 'acc': 84.12, 'ndev': 10606, 'ntest': 10606}, 'SST2': {'devacc': 77.87, 'acc': 77.21, 'ndev': 872, 'ntest': 1821}, 'TREC': {'devacc': 73.13, 'acc': 75.2, 'ndev': 5452, 'ntest': 500}, 'MRPC': {'devacc': 73.95, 'acc': 72.87, 'f1': 81.46, 'ndev': 4076, 'ntest': 1725}, 'SICKRelatedness': {'devpearson': 0.8399843681720919, 'pearson': 0.8502841131338447, 'spearman': 0.7909645021452062, 'mse': 0.2848995148530221, 'yhat': array([2.72301222, 4.01041077, 1.45234219, ..., 3.06356922, 4.31952944,
+       4.80784104]), 'ndev': 500, 'ntest': 4927}, 'SICKEntailment': {'devacc': 83.2, 'acc': 82.95, 'ndev': 500, 'ntest': 4927}, 'STS14': {'deft-forum': {'pearson': PearsonRResult(statistic=0.38460577808610935, pvalue=2.5886328762941477e-17), 'spearman': SignificanceResult(statistic=0.3802390322780415, pvalue=6.28720311263327e-17), 'nsamples': 450}, 'deft-news': {'pearson': PearsonRResult(statistic=0.6895137435355383, pvalue=1.1889239921880708e-43), 'spearman': SignificanceResult(statistic=0.6391664386235238, pvalue=7.487710146627129e-36), 'nsamples': 300}, 'headlines': {'pearson': PearsonRResult(statistic=0.5689467095129367, pvalue=1.5157090523578293e-65), 'spearman': SignificanceResult(statistic=0.5424705611890579, pvalue=1.3150034667499508e-58), 'nsamples': 750}, 'images': {'pearson': PearsonRResult(statistic=0.7306046591669645, pvalue=4.4931434494677366e-126), 'spearman': SignificanceResult(statistic=0.7117084771453533, pvalue=7.795529761511557e-117), 'nsamples': 750}, 'OnWN': {'pearson': PearsonRResult(statistic=0.485076734649669, pvalue=1.5957273067308712e-45), 'spearman': SignificanceResult(statistic=0.5373508055730825, pvalue=2.4572130330964935e-57), 'nsamples': 750}, 'tweet-news': {'pearson': PearsonRResult(statistic=0.6610967645609744, pvalue=2.0886153468290942e-95), 'spearman': SignificanceResult(statistic=0.6206412393966277, pvalue=4.557466457580216e-81), 'nsamples': 750}, 'all': {'pearson': {'mean': 0.5866407315853653, 'wmean': 0.590458766431285}, 'spearman': {'mean': 0.5719294257009478, 'wmean': 0.5791962156240711}}}}

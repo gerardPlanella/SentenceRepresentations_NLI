@@ -136,3 +136,9 @@ vocab.pickle
 *.out
 !runs/*.out
 !stored_slurms/*.out
+
+*.zip
+
+models/
+models_linear_2/
+models_linear_4/
