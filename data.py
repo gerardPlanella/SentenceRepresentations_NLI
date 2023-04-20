@@ -8,6 +8,8 @@ import torch
 from datasets import load_dataset
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
+import pickle
+import os
 
 
 class NLTKTokenizer():
@@ -22,13 +24,23 @@ class CustomDataset(Dataset):
     def __init__(self, dataset_name = "snli", tokenizer_cls = NLTKTokenizer, data_percentage:int = 100) -> None:
         assert data_percentage > 0 and data_percentage <= 100
         self.dataset = load_dataset(dataset_name, split = [f"train[:{data_percentage}%]", f"validation[:{data_percentage}%]", f"test[:{data_percentage}%]"])
+        self.dataset = {f"{split}": self.dataset[i] for i, split in enumerate(["train", "validation", "test"])}
         self.dataset_name = dataset_name
         self.tokenizer_cls = tokenizer_cls()
+        self.preprocessed_dataset = None
+
+    def filter_fn(self, example):
+      return example['label'] != -1
 
     def get_data(self):
         splits = ["train", "validation", "test"]
+        if self.preprocessed_dataset is not None:
+           return self.preprocessed_dataset
+        
         for split in splits:
             self.dataset[split] = self.dataset[split].map(self.preprocess)
+            self.dataset[split] = self.dataset[split].filter(lambda x: x["label"] != -1)
+        self.preprocessed_dataset = (self.dataset["train"], self.dataset["validation"], self.dataset["test"])
         return self.dataset["train"], self.dataset["validation"], self.dataset["test"]
           
     def preprocess(self, datum):
@@ -41,6 +53,40 @@ class CustomDataset(Dataset):
         return datum
       else:
         return None
+    
+    def get_vocab(self, splits=["train", "validation", "test"], vocab_path = "dataset_vocab.pickle", reload = False):
+        if self.dataset_name == "snli":
+
+            if os.path.exists(vocab_path) and not reload:
+                print("Loading saved Vocabulary from " + vocab_path)
+                with open(vocab_path, 'rb') as f:
+                    data = pickle.load(f)
+                    return data
+
+            train, val, test = self.get_data()
+            datasplits = {"train":train, "validation":val, "test":test}
+            vocab = {}
+            for split in splits:
+                data = datasplits[split]
+                for datum in data:
+                    premise_tokens = set(datum["premise"])
+                    hypothesis_tokens = set(datum["hypothesis"])
+                    tokens = premise_tokens.union(hypothesis_tokens)
+                    for token in tokens:
+                        token_stem = self.tokenizer_cls.encode(token)[0].lower()
+                        if token_stem not in vocab:
+                            vocab[token_stem] = 1
+
+            with open(vocab_path, 'wb') as f:
+                #TODO: Save vocab with data_percentage
+                print("Saving vocabulary at: " + vocab_path)
+                pickle.dump(vocab, f)
+
+            return vocab
+        else:
+            return None
+
+
     
     
 
@@ -113,7 +159,11 @@ class Vocabulary:
 
 
 
-def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTokenizer, reduced_vocab = False) -> Tuple[Vocabulary, FeatureVectors]:
+def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTokenizer, reduced_vocab = False, dataset_vocab = None, vocab_path = 'vocab.pickle', reload = False, save=True, use_tqdm = False) -> Tuple[Vocabulary, FeatureVectors]:
+    if os.path.exists(vocab_path) and not reload:
+       print("Loading saved Vocabulary from " + vocab_path)
+       return load_vocab(vocab_path)
+    
     vocab = Vocabulary()
     featureVectors = FeatureVectors()
     tokenizer = tokenizer_cls()
@@ -121,7 +171,9 @@ def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTo
     num_lines = sum(1 for line in open(path,'r'))
     idx = 0
     with open(path) as f:
-        for line in tqdm(f, total=num_lines):
+        if use_tqdm:
+            f = tqdm(f, total=num_lines)
+        for line in f:
             idx += 1
             elements = line.split(" ")
             token = elements[0]
@@ -131,6 +183,10 @@ def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTo
                token = token.lower()
             else:
                continue
+            if dataset_vocab is not None:
+               #Merge Vocabulary
+               if token not in dataset_vocab:
+                  continue
             features = list(map(float, elements[1:]))
             vocab.count_token(token)
             featureVectors.add_feature(token, features)
@@ -139,14 +195,28 @@ def load_embeddings(path = "dataset/glove.840B.300d.txt", tokenizer_cls = NLTKTo
                 break
     vocab.build()
     featureVectors.build(vocab)
+    if save:
+      print("Saving vocabulary at " + vocab_path)
+      save_vocab(vocab, featureVectors, vocab_path)
 
     return (vocab, featureVectors)
+
+def save_vocab(vocab, featureVectors, path = 'vocab.pickle'):
+    data = (vocab, featureVectors)
+    with open(path, 'wb') as f:
+        pickle.dump(data, f)
+
+def load_vocab(path = 'vocab.pickle'):
+    with open(path, 'rb') as f:
+        data = pickle.load(f)
+        vocab, featureVectors = data
+        return vocab, featureVectors
 
 def pad(tokens, length, pad_value=1):
     """add padding 1s to a sequence to that it has the desired length"""
     return tokens + [pad_value] * (length - len(tokens))
 
-def prepare_minibatch(mb, vocab):
+def prepare_minibatch(mb, vocab, device):
     """
     Minibatch is a list of examples.
     This function converts words to IDs and returns
@@ -154,7 +224,6 @@ def prepare_minibatch(mb, vocab):
     """
     batch_size = len(mb)
     maxlen = max([max([len(ex["premise"]), len(ex["hypothesis"])]) for ex in mb])
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     x_premise = []
     x_hypothesis = []
@@ -176,34 +245,43 @@ def prepare_minibatch(mb, vocab):
 
 
 
-    x_premise = torch.LongTensor(x_premise)
-    x_premise_packed = pack_padded_sequence(x_premise, seq_len_prem, batch_first = True, sorted = False)
-    x_premise_packed = x_premise_packed.to(device)
+    x_premise = torch.LongTensor(x_premise).to(device)
+    seq_len_prem = torch.IntTensor(seq_len_prem)
+    seq_len_prem = seq_len_prem.to(device)
 
-    x_hypothesis = torch.LongTensor(x_hypothesis)
-    x_hypothesis_packed = pack_padded_sequence(x_hypothesis, seq_len_hyp, batch_first = True, sorted = False)
-    x_hypothesis_packed = x_hypothesis_packed.to(device)
+    x_hypothesis = torch.LongTensor(x_hypothesis).to(device)
+    seq_len_hyp = torch.IntTensor(seq_len_hyp)
+    seq_len_hyp = seq_len_hyp.to(device)
 
-    y = [ex["label"] for ex in mb]
-    y = torch.LongTensor(y)
-    y = y.to(device)
+    
 
-    return x_premise_packed, x_hypothesis_packed, y
+    y = [ex.get("label", None) for ex in mb]
+    if any(val is not None for val in y):
+      y = torch.LongTensor(y)
+      y = y.to(device)
+    else: 
+       y = None
+
+    return (x_premise, seq_len_prem), (x_hypothesis, seq_len_hyp), y
 
 
 
-def get_minibatch(data, batch_size=64, shuffle=True):
+def get_minibatch(data, batch_size=64, shuffle=True, device="cpu"):
     """Return minibatches, optional shuffling"""
 
+    indices = list(range(len(data)))
     if shuffle:
         print("Shuffling training data")
-        random.shuffle(data)  # shuffle training data each epoch
+        random.shuffle(indices)
 
     batch = []
 
     # yield minibatches
-    for example in data:
-        batch.append(example)
+    for i in indices:
+        #TODO: Generate new vocab and delete
+        if(data[i]["label"] == -1):
+           continue
+        batch.append(data[i])
 
         if len(batch) == batch_size:
             yield batch
