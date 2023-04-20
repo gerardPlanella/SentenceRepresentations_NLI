@@ -49,9 +49,9 @@ After trainig these models on the Stanford Natural Language Inference (SNLI) cor
         conda env create -f "environment_gpu.yml"
         conda activate ATCS_GPU
 ```
-3. Download Pretrained models and Vocabulary files from #TODO: Add link
-    * Copy the models, results folders and paste them to the repositorie's base folder.
-    * Copy the contents of the folder and move it to the dataset folder of the repository.        
+3. Download Pretrained models and Vocabulary files from our [Google Drive Folder](https://drive.google.com/drive/folders/1PuZEuPfDnWn2QKaTH3KOP8KGwctU2-9S?usp=sharing)
+    * Copy all the models folders and paste them to the repositorie's base folder.
+    * Copy the contents of the dataset folder and move it to the dataset folder of the repository.        
 3. Clone SentEval repo into folder at same level as repositorie's
 ```
         git clone https://github.com/facebookresearch/SentEval.git
@@ -87,10 +87,13 @@ After trainig these models on the Stanford Natural Language Inference (SNLI) cor
 ## Model Training
 The scrpit used for training is the train_nli.py script. It can be run with the following arguments: 
 ```bash
-usage: train_nli.py [-h] [--num_epochs NUM_EPOCHS] [--embedding_dim EMBEDDING_DIM] [--classifier_fc_dim CLASSIFIER_FC_DIM] [--lr LR] [--lr_decay LR_DECAY] [--encoder_dropout ENCODER_DROPOUT]
-                    [--encoder_pooling ENCODER_POOLING] [--encoder_lstm_dim ENCODER_LSTM_DIM] [--encoder ENCODER] [--data_percentage DATA_PERCENTAGE] [--reload_dataset] [--dataset DATASET]
-                    [--tokenizer TOKENIZER] [--dataset_vocab_path DATASET_VOCAB_PATH] [--vocab_path VOCAB_PATH] [--embedding_path EMBEDDING_PATH] [--checkpoint_path CHECKPOINT_PATH]
-                    [--batch_size BATCH_SIZE] [--eval_batch_size EVAL_BATCH_SIZE] [--tensorboard_dir TENSORBOARD_DIR] [--lr_factor LR_FACTOR] [--seed SEED]
+usage: train_nli.py [-h] [--num_epochs NUM_EPOCHS] [--embedding_dim EMBEDDING_DIM] [--classifier_fc_dim CLASSIFIER_FC_DIM]
+                    [--lr LR] [--lr_decay LR_DECAY] [--encoder_dropout ENCODER_DROPOUT] [--encoder_pooling ENCODER_POOLING]
+                    [--encoder_lstm_dim ENCODER_LSTM_DIM] [--encoder ENCODER] [--data_percentage DATA_PERCENTAGE]
+                    [--reload_dataset] [--dataset DATASET] [--tokenizer TOKENIZER] [--dataset_vocab_path DATASET_VOCAB_PATH]
+                    [--vocab_path VOCAB_PATH] [--embedding_path EMBEDDING_PATH] [--checkpoint_path CHECKPOINT_PATH]
+                    [--batch_size BATCH_SIZE] [--eval_batch_size EVAL_BATCH_SIZE] [--tensorboard_dir TENSORBOARD_DIR]
+                    [--lr_factor LR_FACTOR] [--complex_model] [--seed SEED]
 
 NLI training
 
@@ -117,6 +120,7 @@ options:
   --eval_batch_size EVAL_BATCH_SIZE
   --tensorboard_dir TENSORBOARD_DIR
   --lr_factor LR_FACTOR
+  --complex_model
   --seed SEED           seed
 ```
 
@@ -124,19 +128,19 @@ There are many parameters that you can play around with but to reproduce the ori
 
 1. Average Word Embeddings:
 ```
-        python train_nli.py --encoder "awe"
+        python train_nli.py --encoder "awe" --complex_model
 ```
 2. Unidirectional LSTM:
 ```
-        python train_nli.py --encoder "lstm"
+        python train_nli.py --encoder "lstm" --complex_model
 ```
 3. Bidirectional BiLSTM: 
 ```
-        python train_nli.py --encoder "bilstm"
+        python train_nli.py --encoder "bilstm" --complex_model
 ```
 4. Bidirectional BiLSTM with Max Pooling:
 ```
-        python train_nli.py --encoder "bilstm" --encoder_pooling "max"
+        python train_nli.py --encoder "bilstm" --encoder_pooling "max" --complex_model
 ```
 After training, the models will be saved in the models/ directory by default.
 
@@ -146,7 +150,8 @@ The train_nli.py script will also evaluate the model on SNLI after training, but
 ### SentEval Evaluation
 The script senteval.py will evaluate a model given a path to its checkpoint, these are the possible input arguments one can use:
 ```bash
-usage: senteval.py [-h] [--data_path DATA_PATH] [--vocab_path VOCAB_PATH] [--model_path MODEL_PATH] [--embedding_path EMBEDDING_PATH] [--kfold KFOLD] [--tokenizer TOKENIZER] [--usepytorch]
+usage: senteval.py [-h] [--data_path DATA_PATH] [--vocab_path VOCAB_PATH] [--model_path MODEL_PATH]
+                   [--embedding_path EMBEDDING_PATH] [--kfold KFOLD] [--tokenizer TOKENIZER] [--usepytorch]
                    [--batch_size BATCH_SIZE] [--num_epochs NUM_EPOCHS] [--optim OPTIM] [--results_path RESULTS_PATH]
 
 options:
