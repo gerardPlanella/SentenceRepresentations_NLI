@@ -135,10 +135,13 @@ vocab.pickle
 # Remove useless out files
 *.out
 !runs/*.out
-!stored_slurms/*.out
 
 *.zip
 
 models/
 models_linear_2/
 models_linear_3/
+models_nonlinear_4/
+stored_slurms/
+stored_slurms_linear_2/
+stored_slurms_nonlinear_4/
